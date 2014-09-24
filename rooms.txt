@@ -1,0 +1,38 @@
+[
+    {
+        "room_num": 89, 
+        "site": "meta.stackexchange.com", 
+        "post_requests": false, 
+        "monitor": true
+    }, 
+    {
+        "room_num": 11, 
+        "site": "stackoverflow.com", 
+        "post_requests": false, 
+        "monitor": true
+    }, 
+    {
+        "room_num": 29074, 
+        "site": "stackoverflow.com", 
+        "post_requests": false, 
+        "monitor": true
+    }, 
+    {
+        "room_num": 17, 
+        "site": "stackoverflow.com", 
+        "post_requests": false, 
+        "monitor": true
+    }, 
+    {
+        "room_num": 6, 
+        "site": "stackoverflow.com", 
+        "post_requests": false, 
+        "monitor": true
+    }, 
+    {
+        "room_num": 773, 
+        "site": "meta.stackexchange.com", 
+        "post_requests": true, 
+        "monitor": false
+    }
+]
