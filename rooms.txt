@@ -30,6 +30,12 @@
         "monitor": true
     }, 
     {
+        "room_num": 41570, 
+        "site": "stackoverflow.com", 
+        "post_requests": false, 
+        "monitor": true
+    }, 
+    {
         "room_num": 773, 
         "site": "meta.stackexchange.com", 
         "post_requests": true, 

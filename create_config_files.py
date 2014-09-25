@@ -110,6 +110,12 @@ rooms = [
         'monitor': True,
         'post_requests': False
     },
+	{
+        'site': "stackoverflow.com",
+        'room_num': 41570,
+        'monitor': True,
+        'post_requests': False
+    },
     {
         'site': "meta.stackexchange.com",
         'room_num': 773,
