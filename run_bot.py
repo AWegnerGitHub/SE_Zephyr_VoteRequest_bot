@@ -110,10 +110,8 @@ class ChatMonitorBot(threading.Thread):
                         reason_msg += u" %s " % (matches.group(2).replace("-"," "))
                 if reason_msg:
                     message += u" Reason: {}".format(reason_msg)
-                print "---"
-                # post_requests_to_room(message)
                 message_queue.put(message)
-                print
+
 
     def post_request_message(self, message):
         print u"{} => {}".format(self.room.name, message)
