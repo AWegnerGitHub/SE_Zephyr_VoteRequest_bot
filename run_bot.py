@@ -4,7 +4,9 @@ import logging.handlers
 import re
 import threading
 import time
+import traceback
 import requests
+import sys
 import ChatExchange.chatexchange.client
 import ChatExchange.chatexchange.events
 import json
@@ -83,7 +85,7 @@ class ChatMonitorBot(threading.Thread):
         #            should_return = False
         if not self.running:
             should_return = True
-        if not isinstance(event, ChatExchange.chatexchange.events.MessagePosted):
+        if not isinstance(event, ChatExchange.chatexchange.events.MessagePosted) and not isinstance(event, ChatExchange.chatexchange.events.UserMentioned):
             should_return = True
         if should_return:
             return
@@ -93,24 +95,39 @@ class ChatMonitorBot(threading.Thread):
         if event.user.id == self.client.get_me().id:
             return
 
-        h = HTMLParser()
-        content = h.unescape(message.content_source).strip()
+        # This prints the bot was messaged in multiple rooms
+        # if isinstance(event, ChatExchange.chatexchange.events.UserMentioned):
+        #     print "     Mentioned in %s by %s" % (self.room.name, self.client.get_user(event.user.id).name)
 
-        for p in self.patterns:
-            matches = re.compile(p['regex'], re.IGNORECASE).match(content)
-            if matches:
-                message = u"**%s** for %s by %s %s" % (p['translation'], matches.group(4),
-                                                      self.client.get_user(event.user.id).name, self.room_base_message)
-                reason_msg = ""
-                if matches.group(2) or matches.group(3):
-                    if matches.group(3):
-                        if matches.group(3).strip() not in ("(","-"):
-                            reason_msg += u" %s " % (matches.group(3))
-                    if matches.group(2):
-                        reason_msg += u" %s " % (matches.group(2).replace("-"," "))
-                if reason_msg:
-                    message += u" Reason: {}".format(reason_msg)
-                message_queue.put(message)
+        h = HTMLParser()
+        should_check_message = False
+        try:
+            content = h.unescape(message.content_source).strip()
+            should_check_message = True
+        except requests.exceptions.HTTPError, e:
+            print "   404 Raised. Ignoring message."
+            print "   Occurred in %s by user %s" % (self.room_base_message, self.client.get_user(event.user.id).name)
+            print "   Error %s" % (e)
+            print traceback.format_exc()
+            print sys.exc_info()[0]
+
+        if should_check_message:
+            for p in self.patterns:
+                matches = re.compile(p['regex'], re.IGNORECASE).match(content)
+                if matches:
+                    message_to_post = u"**%s** for %s by %s %s" % (p['translation'], matches.group(4),
+                                                          self.client.get_user(event.user.id).name,
+                                                          self.room_base_message)
+                    reason_msg = ""
+                    if matches.group(2) or matches.group(3):
+                        if matches.group(3):
+                            if matches.group(3).strip() not in ("(","-"):
+                                reason_msg += u" %s " % (matches.group(3))
+                        if matches.group(2):
+                            reason_msg += u" %s " % (matches.group(2).replace("-"," "))
+                    if reason_msg:
+                        message_to_post += u" Reason: {}".format(reason_msg)
+                    message_queue.put(message_to_post)
 
 
     def post_request_message(self, message):
