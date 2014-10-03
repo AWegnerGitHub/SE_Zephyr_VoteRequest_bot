@@ -88,6 +88,12 @@ rooms = [
     },
     {
         'site': "stackoverflow.com",
+        'room_num': 5,
+        'monitor': True,
+        'post_requests': False
+    },
+    {
+        'site': "stackoverflow.com",
         'room_num': 11,
         'monitor': True,
         'post_requests': False
