@@ -13,7 +13,6 @@ import json
 from Queue import Queue
 
 # Import our user settings
-
 try:
     import user_settings
 except ImportError, e:
@@ -81,8 +80,6 @@ class ChatMonitorBot(threading.Thread):
         should_return = False
         if not self.enabled:
             should_return = True
-        # if (not self.enabled) and event.user.id == self.owner_id and event.message.content.startswith("&gt;&gt;"):
-        #            should_return = False
         if not self.running:
             should_return = True
         if not isinstance(event, ChatExchange.chatexchange.events.MessagePosted) and not isinstance(event, ChatExchange.chatexchange.events.UserMentioned):
@@ -150,13 +147,6 @@ if __name__ == '__main__':
        
     for b in bots:
         b.start()
-
-    # messages = [
-    #     "`Zephyr started`"
-    # ]
-    #
-    # for m in messages:
-    #     message_queue.put(m)
 
     while True:
         val = message_queue.get()
