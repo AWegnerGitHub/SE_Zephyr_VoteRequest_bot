@@ -77,6 +77,10 @@ patterns = [
         'regex': "^((?:\[)?vlq.*?(?:\])?|\[tag:vlq(-.*)?])(?: )?((?:\[tag\:*)?[\w \-\(\)]+(?:\])?)?(?: )?(https?://.*\.com/(?:q(?:uestions)?|a(?:nswer)?)/\d+(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)",
         'translation': "Flag Request -> Very Low Quality"
     },
+    {
+        'regex': r"^(\\\[\[Blaze\]\(https://github\.com/Charcoal-SE/Blaze\)\]) (?:q(?:uestion)?|a(?:nswer)?)()() flagged by \w+: (https?://.*\.com/(?:q(?:uestions)?|a(?:nswer)?)/\d+(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)",
+        'translation': "Flag Request"
+    }
 ]
 
 rooms = [
@@ -119,6 +123,12 @@ rooms = [
 	{
         'site': "stackoverflow.com",
         'room_num': 41570,
+        'monitor': True,
+        'post_requests': False
+    },
+    {
+        'site': "stackexchange.com",
+        'room_num': 11540,
         'monitor': True,
         'post_requests': False
     },

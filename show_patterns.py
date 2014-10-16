@@ -7,6 +7,7 @@ with open('patterns.txt', 'r') as f:
     patterns = json.load(f)
 
 pprint.pprint(patterns, indent=4)
+print patterns[-1]['regex']
 
 test_strings = [
     "[tag:cv-pls-too-broad-offsite-resource-unclear-whatever] http://stackoverflow.com/questions/25959443/how-do-i-create-a-hierarchical-state-machine-using-c-sharp",
@@ -15,7 +16,8 @@ test_strings = [
     "[tag:cv-plz] http://stackoverflow.com/questions/3272285/dns-issue-www-example-not-working-but-example-com-does (very old question, off-topic) ",
     "naa - http://stackoverflow.com/a/25905260/2982225 ",
     "naa finished @DroidDev ",
-    "[tag:cv-pls] no-repro http://stackoverflow.com/q/18114801/3622940 see op answer "
+    "[tag:cv-pls] no-repro http://stackoverflow.com/q/18114801/3622940 see op answer ",
+    "\[[Blaze](https://github.com/Charcoal-SE/Blaze)] answer flagged by Undo: http://stackoverflow.com/a/26389222 "
 ]
 
 room_base_message = "from [%s](http://chat.%s/rooms/%s/)" % ('TESTING!', "TESTING.NONE", 89)
@@ -24,10 +26,10 @@ for content in test_strings:
     for p in patterns:
         matches = re.compile(p['regex'], re.IGNORECASE).match(content)
         if matches:
+            reason_msg = ""
             message = "**%s** for %s by %s %s" % (p['translation'], matches.group(4),
                                                       "TEST_USER", room_base_message)
             if matches.group(2) or matches.group(3):
-                reason_msg = ""
                 if matches.group(3):
                     if matches.group(3).strip() not in ("(","-"):
                         reason_msg += " %s " % (matches.group(3))

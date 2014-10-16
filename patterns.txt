@@ -74,5 +74,9 @@
     {
         "regex": "^((?:\\[)?vlq.*?(?:\\])?|\\[tag:vlq(-.*)?])(?: )?((?:\\[tag\\:*)?[\\w \\-\\(\\)]+(?:\\])?)?(?: )?(https?://.*\\.com/(?:q(?:uestions)?|a(?:nswer)?)/\\d+(?:/)?(?:\\d+|(?:\\w|-)+)?(?:/\\d+)?(?:#\\d+)?)", 
         "translation": "Flag Request -> Very Low Quality"
+    }, 
+    {
+        "regex": "^(\\\\\\[\\[Blaze\\]\\(https://github\\.com/Charcoal-SE/Blaze\\)\\]) (?:q(?:uestion)?|a(?:nswer)?)()() flagged by \\w+: (https?://.*\\.com/(?:q(?:uestions)?|a(?:nswer)?)/\\d+(?:/)?(?:\\d+|(?:\\w|-)+)?(?:/\\d+)?(?:#\\d+)?)", 
+        "translation": "Flag Request"
     }
 ]
