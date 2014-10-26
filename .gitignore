@@ -47,5 +47,4 @@ docs/_build/
 .idea/
 
 # Others
-logs/
 user_settings.py

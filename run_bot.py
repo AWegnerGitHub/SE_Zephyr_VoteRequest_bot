@@ -11,12 +11,18 @@ import ChatExchange.chatexchange.client
 import ChatExchange.chatexchange.events
 import json
 from Queue import Queue
+import logging
+from utils import utils
+
+logging = utils.setup_logging("zephyr_monitor", file_level=logging.DEBUG, console_level=logging.INFO,
+                              requests_level=logging.CRITICAL, chatexchange_level=logging.CRITICAL)
 
 # Import our user settings
 try:
     import user_settings
 except ImportError, e:
     if e.message != 'No module named user_settings':
+        logging.critical("No module found: {}".format(e.message))
         raise
     import getpass
    
@@ -67,7 +73,7 @@ class ChatMonitorBot(threading.Thread):
         self.room.watch(self.on_event)
         self.update_room_information()
 
-        print "Starting bot in {}".format(self.room.name)
+        logging.info("Starting bot in {}".format(self.room.name))
 
         while self.running:
             time.sleep(0.25)
@@ -102,11 +108,11 @@ class ChatMonitorBot(threading.Thread):
             content = h.unescape(message.content_source).strip()
             should_check_message = True
         except requests.exceptions.HTTPError, e:
-            print "   404 Raised. Ignoring message."
-            print "   Occurred in %s by user %s" % (self.room_base_message, self.client.get_user(event.user.id).name)
-            print "   Error %s" % (e)
-            print traceback.format_exc()
-            print sys.exc_info()[0]
+            logging.info("   404 Raised. Ignoring message.")
+            logging.info("   Occurred in %s by user %s" % (self.room_base_message, self.client.get_user(event.user.id).name))
+            logging.info("   Error %s" % (e))
+            logging.info(traceback.format_exc())
+            logging.info(sys.exc_info()[0])
 
         if should_check_message:
             for p in self.patterns:
@@ -128,7 +134,7 @@ class ChatMonitorBot(threading.Thread):
 
 
     def post_request_message(self, message):
-        print u"{} => {}".format(self.room.name, message)
+        logging.info(u"{} => {}".format(self.room.name, message))
         self.room.send_message(message)
        
 
@@ -142,9 +148,6 @@ if __name__ == '__main__':
     for r in rooms:
         bots.append(ChatMonitorBot(message_queue, r['room_num'], r['site'], r['monitor'], r['post_requests'], patterns))
 
-    import pprint
-    pprint.pprint(bots, indent=4)
-       
     for b in bots:
         b.start()
 
@@ -158,6 +161,6 @@ if __name__ == '__main__':
                     try:
                         b.post_request_message(val)
                     except requests.exceptions.ConnectionError, e:
-                        print "Error printing to room"
-                        print "Connection error %s" % (e)
+                        logging.critical("Error printing to room")
+                        logging.critical("Connection error %s" % (e))
 
