@@ -27,4 +27,7 @@ def setup_logging(file_name, file_level=logging.INFO, console_level=logging.INFO
     chatexchange_log = logging.getLogger('ChatExchange.chatexchange.client.Client')
     chatexchange_log.setLevel(chatexchange_level)
 
+    chatexchange_log = logging.getLogger('ChatExchange.chatexchange.rooms.Room')
+    chatexchange_log.setLevel(chatexchange_level)
+
     return logger
