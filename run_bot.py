@@ -13,6 +13,7 @@ import json
 from Queue import Queue
 import logging
 from utils import utils
+import os
 
 logging = utils.setup_logging("zephyr_monitor", file_level=logging.DEBUG, console_level=logging.INFO,
                               requests_level=logging.CRITICAL, chatexchange_level=logging.CRITICAL)
@@ -123,7 +124,7 @@ class ChatMonitorBot(threading.Thread):
                     reason_msg = ""
                     if matches.group(2) or matches.group(3):
                         if matches.group(3):
-                            if matches.group(3).strip() not in ("(","-"):
+                            if matches.group(3).strip() not in ("(","-",":"):
                                 reason_msg += u" %s " % (matches.group(3))
                         if matches.group(2):
                             reason_msg += u" %s " % (matches.group(2).replace("-"," "))
@@ -135,15 +136,14 @@ class ChatMonitorBot(threading.Thread):
     def post_request_message(self, message):
         logging.info(u"{} => {}".format(self.room.name, message))
         self.room.send_message(message)
-       
 
 if __name__ == '__main__':
     with open('rooms.txt', 'r') as f:
         rooms = json.load(f)
-       
+
     with open('patterns.txt', 'r') as f:
         patterns = json.load(f)
-       
+
     for r in rooms:
         bots.append(ChatMonitorBot(message_queue, r['room_num'], r['site'], r['monitor'], r['post_requests'], patterns))
 
@@ -162,4 +162,5 @@ if __name__ == '__main__':
                     except requests.exceptions.ConnectionError, e:
                         logging.critical("Error printing to room")
                         logging.critical("Connection error %s" % (e))
+
 

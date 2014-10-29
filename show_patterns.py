@@ -17,7 +17,8 @@ test_strings = [
     "naa - http://stackoverflow.com/a/25905260/2982225 ",
     "naa finished @DroidDev ",
     "[tag:cv-pls] no-repro http://stackoverflow.com/q/18114801/3622940 see op answer ",
-    "\[[Blaze](https://github.com/Charcoal-SE/Blaze)] answer flagged by Undo: http://stackoverflow.com/a/26389222 "
+    "\[[Blaze](https://github.com/Charcoal-SE/Blaze)] answer flagged by Undo: http://stackoverflow.com/a/26389222 ",
+    "[tag:cv-pls]: http://meta.stackexchange.com/questions/242741/i-have-two-emacs-buffers-in-a-frame-a-cc-b-cc"
 ]
 
 room_base_message = "from [%s](http://chat.%s/rooms/%s/)" % ('TESTING!', "TESTING.NONE", 89)
