@@ -137,6 +137,7 @@ class ChatMonitorBot(threading.Thread):
         logging.info(u"{} => {}".format(self.room.name, message))
         self.room.send_message(message)
 
+
 if __name__ == '__main__':
     with open('rooms.txt', 'r') as f:
         rooms = json.load(f)
@@ -162,5 +163,6 @@ if __name__ == '__main__':
                     except requests.exceptions.ConnectionError, e:
                         logging.critical("Error printing to room")
                         logging.critical("Connection error %s" % (e))
-
-
+        for b in bots:
+            if not b.isAlive():
+                print b, "is dead!"
