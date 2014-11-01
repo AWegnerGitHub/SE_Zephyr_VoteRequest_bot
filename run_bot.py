@@ -61,7 +61,6 @@ class ChatMonitorBot(threading.Thread):
         self.enabled = True
         self.running = True
         self.daemon = True
-#        self.setup_logging()
         self.queue = queue
         self.room_base_message = None
         self.patterns = monitor_patterns
@@ -109,10 +108,10 @@ class ChatMonitorBot(threading.Thread):
             content = h.unescape(message.content_source).strip()
             should_check_message = True
         except requests.exceptions.HTTPError, e:
-            logging.info("   404 Raised. Ignoring message.")
-            logging.info("   Occurred in %s by user %s" % (self.room_base_message, self.client.get_user(event.user.id).name))
-            logging.info("   Error %s" % (e))
-            logging.info(traceback.format_exc())
+            logging.debug("   404 Raised. Ignoring message.")
+            logging.debug("   Occurred in %s by user %s" % (self.room_base_message, self.client.get_user(event.user.id).name))
+            logging.debug("   Error %s" % (e))
+            logging.debug(traceback.format_exc())
 
         if should_check_message:
             for p in self.patterns:
