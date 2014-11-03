@@ -48,3 +48,4 @@ docs/_build/
 
 # Others
 user_settings.py
+*.db
