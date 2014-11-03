@@ -14,6 +14,7 @@ from Queue import Queue
 import logging
 from utils import utils
 import os
+import threading
 
 logging = utils.setup_logging("zephyr_monitor", file_level=logging.DEBUG, console_level=logging.INFO,
                               requests_level=logging.CRITICAL, chatexchange_level=logging.CRITICAL)
@@ -130,6 +131,9 @@ class ChatMonitorBot(threading.Thread):
                     if reason_msg:
                         message_to_post += u" Reason: {}".format(reason_msg)
                     message_queue.put(message_to_post)
+                    thr = threading.Thread(target=utils.save_post, args=(matches.group(4), self.site, self.room_number, p['translation']))
+                    thr.start()
+
 
 
     def post_request_message(self, message):
