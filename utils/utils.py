@@ -97,8 +97,9 @@ def save_post_to_db(post, endpoint=None, room_site=None, room_num=None, reason=N
     # Save the user fields to the database
     try:
         save_user(s, data[u'owner'])
-    except KeyError:
+    except KeyError:                    # Post has already been removed, we can't do anything with it
         logging.critical("No owner of post.")
+        return
 
     try:
         save_user(s, data[u'last_editor'])
