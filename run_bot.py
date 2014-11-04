@@ -119,19 +119,19 @@ class ChatMonitorBot(threading.Thread):
             for p in self.patterns:
                 matches = re.compile(p['regex'], re.IGNORECASE).match(content)
                 if matches:
-                    message_to_post = u"**%s** for %s by %s %s" % (p['translation'], matches.group(4),
+                    message = u"**%s** for %s by %s %s" % (p['translation'], matches.group(4),
                                                           self.client.get_user(event.user.id).name,
                                                           self.room_base_message)
                     reason_msg = ""
                     if matches.group(2) or matches.group(3):
                         if matches.group(3):
                             if matches.group(3).strip() not in ("(","-",":"):
-                                reason_msg += " %s " % (re.sub(REASON_CLEAN_REGEX,"",matches.group(3)))
+                                reason_msg += u" %s " % (re.sub(REASON_CLEAN_REGEX,"",matches.group(3)))
                         if matches.group(2):
-                            reason_msg += " %s " % (re.sub(REASON_CLEAN_REGEX,"",matches.group(2)))
+                            reason_msg += u" %s " % (re.sub(REASON_CLEAN_REGEX,"",matches.group(2)))
                     if reason_msg:
-                        message += " Reason: {}".format(reason_msg)
-                    message_queue.put(message_to_post)
+                        message += u" Reason: {}".format(reason_msg)
+                    message_queue.put(message)
                     thr = threading.Thread(target=utils.save_post, args=(matches.group(4), self.site, self.room_number, p['translation']))
                     thr.start()
 

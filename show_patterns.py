@@ -23,7 +23,9 @@ test_strings = [
     "[tag:cv-pls]: http://meta.stackexchange.com/questions/242741/i-have-two-emacs-buffers-in-a-frame-a-cc-b-cc",
     "cv-pls last recommendation for a bit http://stackoverflow.com/q/26357391/189134",
     "[tag:cv-pls] too broad: http://stackoverflow.com/questions/26734497/convert-bytes-array-to-video",
-    "[tag:cv-pls] not an MCVE: http://stackoverflow.com/q/26734489/1234256"
+    "[tag:cv-pls] not an MCVE: http://stackoverflow.com/q/26734489/1234256",
+    "[tag:cv-pls] non-eng http://stackoverflow.com/q/26736764/656243",
+    "cv-pls recommendation http://stackoverflow.com/q/2168701/189134 "
 ]
 
 room_base_message = "from [%s](http://chat.%s/rooms/%s/)" % ('TESTING!', "TESTING.NONE", 89)
@@ -34,17 +36,17 @@ for content in test_strings:
     for p in patterns:
         matches = re.compile(p['regex'], re.IGNORECASE).match(content)
         if matches:
-            reason_msg = ""
-            message = "**%s** for %s by %s %s" % (p['translation'], matches.group(4),
+            message = u"**%s** for %s by %s %s" % (p['translation'], matches.group(4),
                                                       "TEST_USER", room_base_message)
+            reason_msg = ""
             if matches.group(2) or matches.group(3):
                 if matches.group(3):
                     if matches.group(3).strip() not in ("(","-",":"):
-                        reason_msg += " %s " % (re.sub(REASON_CLEAN_REGEX,"",matches.group(3)))
+                        reason_msg += u" %s " % (re.sub(REASON_CLEAN_REGEX,"",matches.group(3)))
                 if matches.group(2):
-                    reason_msg += " %s " % (re.sub(REASON_CLEAN_REGEX,"",matches.group(2)))
+                    reason_msg += u" %s " % (re.sub(REASON_CLEAN_REGEX,"",matches.group(2)))
             if reason_msg:
-                message += " Reason: {}".format(reason_msg)
+                message += u" Reason: {}".format(reason_msg)
                 print message
 #            thr = threading.Thread(target=utils.save_post, args=(matches.group(4), 'meta.stackexchange.com', 89, p['translation']))
 #            thr.start()
