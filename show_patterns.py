@@ -25,7 +25,9 @@ test_strings = [
     "[tag:cv-pls] too broad: http://stackoverflow.com/questions/26734497/convert-bytes-array-to-video",
     "[tag:cv-pls] not an MCVE: http://stackoverflow.com/q/26734489/1234256",
     "[tag:cv-pls] non-eng http://stackoverflow.com/q/26736764/656243",
-    "cv-pls recommendation http://stackoverflow.com/q/2168701/189134 "
+    "cv-pls recommendation http://stackoverflow.com/q/2168701/189134 ",
+    "**Spam** **Q** (100%): [AVG Tech Support Toll Free Number 1-855-205-0915 USA](http://travel.stackexchange.com/questions/38253), by [Jessica Florence](http://travel.stackexchange.com/users/22302), on `travel.stackexchange.com`.",
+    "**Spam** **A** (27.3%): [You can use ssh -v flag to get more output f...](http://superuser.com/a/835804), by [user2986553](http://superuser.com/users/386641), on `superuser.com`. ",
 ]
 
 room_base_message = "from [%s](http://chat.%s/rooms/%s/)" % ('TESTING!', "TESTING.NONE", 89)
@@ -47,6 +49,6 @@ for content in test_strings:
                     reason_msg += u" %s " % (re.sub(REASON_CLEAN_REGEX,"",matches.group(2)))
             if reason_msg:
                 message += u" Reason: {}".format(reason_msg)
-                print message
+            print message
 #            thr = threading.Thread(target=utils.save_post, args=(matches.group(4), 'meta.stackexchange.com', 89, p['translation']))
 #            thr.start()

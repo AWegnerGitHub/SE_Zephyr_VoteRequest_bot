@@ -85,6 +85,10 @@ patterns = [
         'regex': "^((?:\[)?offensive.*?(?:\])?|\[tag:offensive(-.*)?])(?: )?((?:\[tag\:*)?[\w :\-\(\)]+(?:\])?)?(?: )?(https?://.*\.com/(?:q(?:uestions)?|a(?:nswer)?)/\d+(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)",
         'translation': "Offensive Flag Request"
     },
+    {
+        'regex': "^(\*\*Spam\*\* \*\*[QA]\*\* \(\d*(?:\.\d)?%\):) ()()(?:\[[a-z \-0-9\.]*])\((https?://.*\.com/(?:q(?:uestions)?|a(?:nswer)?)/\d+(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)\)",
+        'translation': "Spam Flag Request"
+    },
 ]
 
 rooms = [
