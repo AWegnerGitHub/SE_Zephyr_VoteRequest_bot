@@ -15,13 +15,19 @@ pip install -r requirements.txt
 
 ### User Settings (optional)
 
-If you wish to run this bot without any input on your part, you need to create a `user_settings.py` file that contains the login information this bot will utilize. Remember, there is a 20 reputation requirement to be able to post to a room. If you do not create this file, you will be prompted for login information each time the bot starts.
+If you wish to run this bot without any input on your part, you need to create a `user_settings.py` file that contains the login information this bot will utilize. Remember, there is a 20 reputation requirement to be able to post to a room. If you do not create this file, you will be prompted for login information each time the bot starts. If you are running the bot and saving data to a database, you must utilize this method and provide an `API_KEY` and `API_TOKEN`
 
 The file should look like this. Remember to substitute the correct values or the login with fail:
 
 ```
 email = "bot_login_email@email.com"
 password = "botpassword"
+
+API_KEY = "api_key_to_utilize"
+ACCESS_TOKEN = "api_token_to_utilize"
+
+API_QUESTION_FILTER = "!)b00Tmc6-NwEWPUJj(Ee*fmFv5pIBk3fwa2aR.mlGWVVa"
+API_ANSWER_FILTER = "!.G(S6Mb_2mL_oRfX0bI*RkP3pY.6a"
 ```
 
 ## Configuration
