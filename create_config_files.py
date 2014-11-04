@@ -80,7 +80,11 @@ patterns = [
     {
         'regex': r"^(\\\[\[Blaze\]\(https://github\.com/Charcoal-SE/Blaze\)\]) (?:q(?:uestion)?|a(?:nswer)?)()() flagged by \w+: (https?://.*\.com/(?:q(?:uestions)?|a(?:nswer)?)/\d+(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)",
         'translation': "Flag Request"
-    }
+    },
+    {
+        'regex': "^((?:\[)?offensive.*?(?:\])?|\[tag:offensive(-.*)?])(?: )?((?:\[tag\:*)?[\w :\-\(\)]+(?:\])?)?(?: )?(https?://.*\.com/(?:q(?:uestions)?|a(?:nswer)?)/\d+(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)",
+        'translation': "Offensive Flag Request"
+    },
 ]
 
 rooms = [
