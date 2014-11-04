@@ -37,6 +37,7 @@ except NameError:
 
 bots = []
 message_queue = Queue()
+REASON_CLEAN_REGEX = '[.!,;:\-()]'
 
 
 class ChatMonitorBot(threading.Thread):
@@ -125,11 +126,11 @@ class ChatMonitorBot(threading.Thread):
                     if matches.group(2) or matches.group(3):
                         if matches.group(3):
                             if matches.group(3).strip() not in ("(","-",":"):
-                                reason_msg += u" %s " % (matches.group(3))
+                                reason_msg += " %s " % (re.sub(REASON_CLEAN_REGEX,"",matches.group(3)))
                         if matches.group(2):
-                            reason_msg += u" %s " % (matches.group(2).replace("-"," "))
+                            reason_msg += " %s " % (re.sub(REASON_CLEAN_REGEX,"",matches.group(2)))
                     if reason_msg:
-                        message_to_post += u" Reason: {}".format(reason_msg)
+                        message += " Reason: {}".format(reason_msg)
                     message_queue.put(message_to_post)
                     thr = threading.Thread(target=utils.save_post, args=(matches.group(4), self.site, self.room_number, p['translation']))
                     thr.start()
