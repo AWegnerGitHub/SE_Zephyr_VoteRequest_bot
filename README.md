@@ -65,6 +65,8 @@ The file `patterns.txt` contains a list of dictionaries. Each dictionary contain
  - Flag Request: `flag-pls`, `flag-plz` and if any of these appear in the `[tag:*-pls]`/`[tag:*-plz]` format. 
  - Spam: `spam` 
  - Close/Delete Votes: `nuke-pls`, `nuke-plz` and if any of these appear in the `[tag:*-pls]`/`[tag:*-plz]` format
+ 
+The value `should_post` is a boolean value that indicates whether a match to this pattern should trigger the bot posting the match. If set to `False`, the bot will silently save information to the database without posting a notice.
 
 ### Important Note
 

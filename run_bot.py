@@ -131,7 +131,8 @@ class ChatMonitorBot(threading.Thread):
                             reason_msg += u" %s " % (re.sub(REASON_CLEAN_REGEX,"",matches.group(2)))
                     if reason_msg:
                         message += u" Reason: {}".format(reason_msg)
-                    message_queue.put(message)
+                    if p['should_post']:
+                        message_queue.put(message)
                     thr = threading.Thread(target=utils.save_post, args=(matches.group(4), self.site, self.room_number, p['translation']))
                     thr.start()
 
