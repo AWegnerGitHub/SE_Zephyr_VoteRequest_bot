@@ -7,6 +7,7 @@ import db_model
 import re
 from SEAPI import SEAPI
 from datetime import datetime, timedelta
+import traceback
 import pprint
 # Import our user settings
 try:
@@ -89,7 +90,14 @@ def save_post(url=None, room_site=None, room_num=None, reason=None):
 
 
 def save_post_to_db(post, endpoint=None, room_site=None, room_num=None, reason=None):
-    data = post['items'][0]
+    try:
+        data = post['items'][0]
+    except IndexError:
+        logging.critical(traceback.format_exc())
+        logging.critical("Post:")
+        logging.critical(post)
+        raise
+        
     s = connect_to_db("sqlite:///zephyr_vote_requests.db")
     request_type_id = db_model.RequestType.by_type(s, reason)
     post_type_id = 1 if endpoint == "questions" else 2
