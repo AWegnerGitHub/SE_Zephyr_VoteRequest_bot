@@ -63,8 +63,10 @@ The file `patterns.txt` contains a list of dictionaries. Each dictionary contain
  - Review Reject: Not yet functional
  - Review Request: `rv-pls`, `rv-plz`, `review-pls`, `review-plz`  and if any of these appear in the `[tag:*-pls]`/`[tag:*-plz]` format
  - Flag Request: `flag-pls`, `flag-plz` and if any of these appear in the `[tag:*-pls]`/`[tag:*-plz]` format. 
- - Spam: `spam` 
+ - Spam: `spam`, reports from the [Phamhilator](https://github.com/ArcticEcho/Phamhilator/wiki) bot and [Blaze](https://github.com/Charcoal-SE/Blaze)
+ - Offensive: `offensive`
  - Close/Delete Votes: `nuke-pls`, `nuke-plz` and if any of these appear in the `[tag:*-pls]`/`[tag:*-plz]` format
+
  
 The value `should_post` is a boolean value that indicates whether a match to this pattern should trigger the bot posting the match. If set to `False`, the bot will silently save information to the database without posting a notice.
 
