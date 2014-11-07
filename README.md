@@ -56,6 +56,7 @@ The file `patterns.txt` contains a list of dictionaries. Each dictionary contain
  - Close Votes: `cv-pls`, `cv-plz`, `close-pls`, `close-plz` and if any of these appear in the `[tag:*-pls]`/`[tag:*-plz]` format
  - Not an answer: `flag-naa`, `naa` and if any of these appear in the `[tag:*]` format
  - Very Low Quality: `vlq` and if any of these appear in the `[tag:*]` format
+ - Not an answer: `naa`, `flag-naa` and if any of these appear in the `[tag:*]` format
  - Link Only: `link-only` and if any of these appear in the `[tag:*]` format
  - Delete Votes: `dv-pls`, `dv-plz`, `delv-pls`, `delv-plz`, `delete-pls`, `delete-plz` and if any of these appear in the `[tag:*-pls]`/`[tag:*-plz]` format
  - Undelete Votes: `undv-pls`, `undv-plz`, `undelv-pls`, `undelv-plz` and if any of these appear in the `[tag:*-pls]`/`[tag:*-plz]` format
