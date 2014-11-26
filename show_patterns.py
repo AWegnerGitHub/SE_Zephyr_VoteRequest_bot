@@ -28,6 +28,8 @@ test_strings = [
     "cv-pls recommendation http://stackoverflow.com/q/2168701/189134 ",
     "**Spam** **Q** (100%): [AVG Tech Support Toll Free Number 1-855-205-0915 USA](http://travel.stackexchange.com/questions/38253), by [Jessica Florence](http://travel.stackexchange.com/users/22302), on `travel.stackexchange.com`.",
     "**Spam** **A** (27.3%): [You can use ssh -v flag to get more output f...](http://superuser.com/a/835804), by [user2986553](http://superuser.com/users/386641), on `superuser.com`. ",
+    "[tag:nuke-pls] *shudder* http://stackoverflow.com/questions/1543107",
+    "[tag:cv-pls] *shudder* http://stackoverflow.com/questions/1543107",
 ]
 
 room_base_message = "from [%s](http://chat.%s/rooms/%s/)" % ('TESTING!', "TESTING.NONE", 89)
