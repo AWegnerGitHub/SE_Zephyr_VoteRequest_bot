@@ -166,7 +166,8 @@ def save_post_to_db(post, endpoint=None, room_site=None, room_num=None, reason=N
         view_count=data.setdefault(u'view_count',None),
         request_from_room_num=room_num,
         request_from_room_site=room_site,
-        request_type_id=request_type_id
+        request_type_id=request_type_id,
+        request_time=datetime.now()
     ))
     try:
         s.commit()
