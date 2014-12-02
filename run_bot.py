@@ -82,7 +82,7 @@ class ChatMonitorBot(threading.Thread):
 
     def update_room_information(self):
         self.room.scrape_info()
-        self.room_base_message = "from [%s](http://chat.%s/rooms/%s/)" % (self.room.name, self.site, self.room_number)
+        self.room_base_message = "from [%s](http://chat.%s/rooms/%s/)" % (self.room.name.strip(), self.site, self.room_number)
 
     def on_event(self, event, client):
         should_return = False
