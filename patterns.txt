@@ -108,5 +108,10 @@
         "regex": "^(\\*\\*Spam\\*\\* \\*\\*[QA]\\*\\* \\(\\d*(?:\\.\\d)?%\\):) ()()(?:\\[[a-z \\-0-9\\.]*])\\((https?://.*\\.com/(?:q(?:uestions)?|a(?:nswer)?)/\\d+(?:/)?(?:\\d+|(?:\\w|-)+)?(?:/\\d+)?(?:#\\d+)?)\\)", 
         "should_post": false, 
         "translation": "Spam Flag Request"
+    }, 
+    {
+        "regex": "^(\\[ \\[SmokeDetector\\]\\(https://github.com/Charcoal-SE/SmokeDetector\\) \\]) (Bad keyword in title):() \\[[a-z \\-0-9\\.]*]\\((https?://.*\\.com/(?:q(?:uestions)?|a(?:nswer)?)/\\d+(?:/)?(?:\\d+|(?:\\w|-)+)?(?:/\\d+)?(?:#\\d+)?)\\)", 
+        "should_post": false, 
+        "translation": "Spam Flag Request"
     }
 ]

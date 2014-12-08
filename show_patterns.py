@@ -30,6 +30,8 @@ test_strings = [
     "**Spam** **A** (27.3%): [You can use ssh -v flag to get more output f...](http://superuser.com/a/835804), by [user2986553](http://superuser.com/users/386641), on `superuser.com`. ",
     "[tag:nuke-pls] *shudder* http://stackoverflow.com/questions/1543107",
     "[tag:cv-pls] *shudder* http://stackoverflow.com/questions/1543107",
+    "[ [SmokeDetector](https://github.com/Charcoal-SE/SmokeDetector) ] Bad keyword in title: [1 866 978 6819 gmail account recovery contact number 1 866 978 6819 gmail account recovery phone number](http://stackoverflow.com/questions/27363275/1-866-978-6819-gmail-account-recovery-contact-number-1-866-978-6819-gmail-accoun) by [ab cl](http://stackoverflow.com/users/4338254/ab-cl) on `stackoverflow.com` ",
+
 ]
 
 room_base_message = "from [%s](http://chat.%s/rooms/%s/)" % ('TESTING!', "TESTING.NONE", 89)
