@@ -37,7 +37,7 @@ except NameError:
 
 bots = []
 message_queue = Queue()
-REASON_CLEAN_REGEX = '[^tag:][.!,;:\-()]'
+REASON_CLEAN_REGEX = '^[tag:][.!,;:\-()]'
 
 
 class ChatMonitorBot(threading.Thread):

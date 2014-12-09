@@ -33,12 +33,13 @@ test_strings = [
     "[ [SmokeDetector](https://github.com/Charcoal-SE/SmokeDetector) ] Bad keyword in title: [1 866 978 6819 gmail account recovery contact number 1 866 978 6819 gmail account recovery phone number](http://stackoverflow.com/questions/27363275/1-866-978-6819-gmail-account-recovery-contact-number-1-866-978-6819-gmail-accoun) by [ab cl](http://stackoverflow.com/users/4338254/ab-cl) on `stackoverflow.com` ",
     "[tag:Cv-pls] [tag:wtf] http://stackoverflow.com/questions/27381564/how-to-write-an-screen-driver-in-nasm ",
     "[ [SmokeDetector](https://github.com/Charcoal-SE/SmokeDetector) ] Bad keyword in title, Phone number detected: [support for yahoo mail 18669786819 @call for helpline number](http://stackoverflow.com/questions/27385010/support-for-yahoo-mail-18669786819-call-for-helpline-number) by [jas rat](http://stackoverflow.com/users/4330380/jas-rat) on `stackoverflow.com` ",
-
+    "[tag:cv-pls] [tag:toolrecommendation] cv-pls http://stackoverflow.com/q/27385198/1234256 ",
+    "[tag:cv-pls] [tag:too-broad] http://stackoverflow.com/q/27385313/1234256 It's [tag:too-broad] ",
 
 ]
 
 room_base_message = "from [%s](http://chat.%s/rooms/%s/)" % ('TESTING!', "TESTING.NONE", 89)
-REASON_CLEAN_REGEX = '[^tag:][.!,;:\-()]'
+REASON_CLEAN_REGEX = '^[tag:][.!,;:\-()]'
 
 
 for content in test_strings:
