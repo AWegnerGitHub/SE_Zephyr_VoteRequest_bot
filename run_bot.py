@@ -37,7 +37,7 @@ except NameError:
 
 bots = []
 message_queue = Queue()
-REASON_CLEAN_REGEX = '[.!,;:\-()]'
+REASON_CLEAN_REGEX = '[^tag:][.!,;:\-()]'
 
 
 class ChatMonitorBot(threading.Thread):
@@ -139,7 +139,7 @@ class ChatMonitorBot(threading.Thread):
 
 
     def post_request_message(self, message):
-        logging.info(u"{} => {}".format(self.room.name, message))
+        logging.info(u"{}".format(message))
         self.room.send_message(message)
 
 

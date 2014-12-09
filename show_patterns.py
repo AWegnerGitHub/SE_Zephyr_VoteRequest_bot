@@ -31,11 +31,12 @@ test_strings = [
     "[tag:nuke-pls] *shudder* http://stackoverflow.com/questions/1543107",
     "[tag:cv-pls] *shudder* http://stackoverflow.com/questions/1543107",
     "[ [SmokeDetector](https://github.com/Charcoal-SE/SmokeDetector) ] Bad keyword in title: [1 866 978 6819 gmail account recovery contact number 1 866 978 6819 gmail account recovery phone number](http://stackoverflow.com/questions/27363275/1-866-978-6819-gmail-account-recovery-contact-number-1-866-978-6819-gmail-accoun) by [ab cl](http://stackoverflow.com/users/4338254/ab-cl) on `stackoverflow.com` ",
+    "[tag:Cv-pls] [tag:wtf] http://stackoverflow.com/questions/27381564/how-to-write-an-screen-driver-in-nasm ",
 
 ]
 
 room_base_message = "from [%s](http://chat.%s/rooms/%s/)" % ('TESTING!', "TESTING.NONE", 89)
-REASON_CLEAN_REGEX = '[.!,;:\-()]'
+REASON_CLEAN_REGEX = '[^tag:][.!,;:\-()]'
 
 
 for content in test_strings:
