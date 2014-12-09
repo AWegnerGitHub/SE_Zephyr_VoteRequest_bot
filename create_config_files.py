@@ -112,7 +112,7 @@ patterns = [
         'should_post': False
     },
     {
-        'regex': "^(\[ \[SmokeDetector\]\(https://github.com/Charcoal-SE/SmokeDetector\) \]) (Bad keyword in title):() \[[a-z \-0-9\.]*]\((https?://.*\.com/(?:q(?:uestions)?|a(?:nswer)?)/\d+(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)\)",
+        'regex': "^(\[ \[SmokeDetector\]\(https://github.com/Charcoal-SE/SmokeDetector\) \]) .*(Bad keyword in title).*:() \[[a-z \-0-9\.@]*]\((https?://.*\.com/(?:q(?:uestions)?|a(?:nswer)?)/\d+(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)\)",
         'translation': "Spam Flag Request",
         'should_post': False
     },
