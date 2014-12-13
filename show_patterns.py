@@ -35,6 +35,7 @@ test_strings = [
     "[ [SmokeDetector](https://github.com/Charcoal-SE/SmokeDetector) ] Bad keyword in title, Phone number detected: [support for yahoo mail 18669786819 @call for helpline number](http://stackoverflow.com/questions/27385010/support-for-yahoo-mail-18669786819-call-for-helpline-number) by [jas rat](http://stackoverflow.com/users/4330380/jas-rat) on `stackoverflow.com` ",
     "[tag:cv-pls] [tag:toolrecommendation] cv-pls http://stackoverflow.com/q/27385198/1234256 ",
     "[tag:cv-pls] [tag:too-broad] http://stackoverflow.com/q/27385313/1234256 It's [tag:too-broad] ",
+    "[ [SmokeDetector](https://github.com/Charcoal-SE/SmokeDetector) ] Bad keyword in title, Bad keyword in username, Phone number detected: [Inter Caste +917689070805 @ LoVe marriagE SpEcialiSt baba Ji](http://askubuntu.com/questions/560666/inter-caste-917689070805-love-marriage-specialist-baba-ji) by [babaji](http://askubuntu.com/users/358135/babaji) on `askubuntu.com` ",
 
 ]
 
