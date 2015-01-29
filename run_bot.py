@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from HTMLParser import HTMLParser
 import logging
 import logging.handlers
@@ -15,6 +17,7 @@ import logging
 from utils import utils
 import os
 import threading
+import string
 
 logging = utils.setup_logging("zephyr_monitor", file_level=logging.DEBUG, console_level=logging.INFO,
                               requests_level=logging.CRITICAL, chatexchange_level=logging.CRITICAL)
@@ -75,14 +78,15 @@ class ChatMonitorBot(threading.Thread):
         self.room.watch(self.on_event)
         self.update_room_information()
 
-        logging.info("Starting bot in {}".format(self.room.name))
+        logging.info("Starting bot in {} => {}".format(filter(lambda x: x in string.printable, self.room.name.strip()), self.room_number))
 
         while self.running:
             time.sleep(0.25)
 
     def update_room_information(self):
         self.room.scrape_info()
-        self.room_base_message = "from [%s](http://chat.%s/rooms/%s/)" % (self.room.name.strip(), self.site, self.room_number)
+        room_name = (filter(lambda x: x in string.printable, self.room.name.strip())).replace("[","\[").replace("]","\]")
+        self.room_base_message = "from [%s](http://chat.%s/rooms/%s/)" % (room_name, self.site, self.room_number)
 
     def on_event(self, event, client):
         should_return = False
