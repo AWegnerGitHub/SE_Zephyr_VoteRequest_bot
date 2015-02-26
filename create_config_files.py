@@ -116,6 +116,11 @@ patterns = [
         'translation': "Spam Flag Request",
         'should_post': False
     },
+    {
+        'regex': "^(\[ \[SmokeDetector\]\(https://github.(?:com|net)/Charcoal-SE/SmokeDetector\) \]) .*(Blacklisted website).*:() \[[a-z \-0-9\.@+]*]\((https?://.*\.(?:com|net)/(?:q(?:uestions)?|a(?:nswer)?)/\d+(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)\)",
+        'translation': "Spam Flag Request",
+        'should_post': False
+    },
 ]
 
 rooms = [
@@ -155,7 +160,7 @@ rooms = [
         'monitor': True,
         'post_requests': False
     },
-	{
+    {
         'site': "stackoverflow.com",
         'room_num': 41570,
         'monitor': True,

@@ -38,6 +38,7 @@ test_strings = [
     "[ [SmokeDetector](https://github.com/Charcoal-SE/SmokeDetector) ] Bad keyword in title, Bad keyword in username, Phone number detected: [Inter Caste +917689070805 @ LoVe marriagE SpEcialiSt baba Ji](http://askubuntu.com/questions/560666/inter-caste-917689070805-love-marriage-specialist-baba-ji) by [babaji](http://askubuntu.com/users/358135/babaji) on `askubuntu.com` ",
     "**Spam** **A** (100%): [send me a letter to pochtaname@gmail.ru](http://mathoverflow.net/a/190649), by [Sergei](http://mathoverflow.net/users/49208/sergei), on `mathoverflow.net`. ",
     "[tag:cv-plz] http://stackoverflow.com/questions/27669972/folder-structure-of-a-smacss-project-where-to-put-class (opinionated)",
+    "[ [SmokeDetector](https://github.com/Charcoal-SE/SmokeDetector) ] Blacklisted website: [The product hydrates the skin](http://meta.stackexchange.com/questions/250231/the-product-hydrates-the-skin) by [victor frith](http://meta.stackexchange.com/users/284891/victor-frith) on `meta.stackexchange.com` ",
 
 ]
 
