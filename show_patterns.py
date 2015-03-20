@@ -39,6 +39,7 @@ test_strings = [
     "**Spam** **A** (100%): [send me a letter to pochtaname@gmail.ru](http://mathoverflow.net/a/190649), by [Sergei](http://mathoverflow.net/users/49208/sergei), on `mathoverflow.net`. ",
     "[tag:cv-plz] http://stackoverflow.com/questions/27669972/folder-structure-of-a-smacss-project-where-to-put-class (opinionated)",
     "[ [SmokeDetector](https://github.com/Charcoal-SE/SmokeDetector) ] Blacklisted website: [The product hydrates the skin](http://meta.stackexchange.com/questions/250231/the-product-hydrates-the-skin) by [victor frith](http://meta.stackexchange.com/users/284891/victor-frith) on `meta.stackexchange.com` ",
+    "[ [SmokeDetector](https://github.com/Charcoal-SE/SmokeDetector) ] Bad keyword in body, Blacklisted website: [However take that same aesthetic and put](http://drupal.stackexchange.com/questions/152240/however-take-that-same-aesthetic-and-put) by [olivianewton](http://drupal.stackexchange.com/users/45453/olivianewton) on `drupal.stackexchange.com` ",
 
 ]
 
