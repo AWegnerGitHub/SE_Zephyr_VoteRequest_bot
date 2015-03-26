@@ -70,6 +70,7 @@ def save_post(url=None, room_site=None, room_num=None, reason=None):
         site_parameter = matches.group(2).split(".")[0]  # Not all sites are top level, some are site.stackexchange.com
     except AttributeError:
         logging.critical("URL Error: {}".format(url))
+        return
     endpoint = endpoint_dict[matches.group(3)]
     post_id = matches.group(4)
     if endpoint == "questions":
