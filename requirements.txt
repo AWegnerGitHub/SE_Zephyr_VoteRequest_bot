@@ -1,4 +1,5 @@
 beautifulsoup
-requests
+requests==2.5.3
 websocket-client
+beautifulsoup4
 sqlalchemy
