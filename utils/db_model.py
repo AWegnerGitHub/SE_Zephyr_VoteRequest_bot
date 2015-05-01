@@ -62,7 +62,7 @@ class Post(Base):
     last_check = Column(DateTime, nullable=True)
 
     def __repr__(self):
-        return "<Post(id={}, Type={}, link={})>".format(self.id, self.name, self.link)
+        return "<Post(id={}, Type={}, link={})>".format(self.id, self.post_type, self.link)
 
 
 class User(Base):
