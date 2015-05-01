@@ -18,6 +18,7 @@ from utils import utils
 import os
 import threading
 import string
+import common_spam_urls
 
 logging = utils.setup_logging("zephyr_monitor", file_level=logging.DEBUG, console_level=logging.INFO,
                               requests_level=logging.CRITICAL, chatexchange_level=logging.CRITICAL)
@@ -41,6 +42,15 @@ except NameError:
 bots = []
 message_queue = Queue()
 REASON_CLEAN_REGEX = '^[tag:][.!,;:\-()]'
+
+commands = {
+    'spamreport': {'restricted': True,
+                   'restricted_users': [66258,      # Andy
+                                        186281,     # Andy
+                                        ],
+                   'command': common_spam_urls.print_spam_statistics()}
+
+}
 
 
 class ChatMonitorBot(threading.Thread):
@@ -137,8 +147,17 @@ class ChatMonitorBot(threading.Thread):
                         message += u" Reason: {}".format(reason_msg)
                     if p['should_post']:
                         message_queue.put(message)
-                    thr = threading.Thread(target=utils.save_post, args=(matches.group(4), self.site, self.room_number, p['translation']))
-                    thr.start()
+                    if matches.group(4):
+                        thr = threading.Thread(target=utils.save_post, args=(matches.group(4), self.site, self.room_number, p['translation']))
+                        thr.start()
+                    else:
+                        logging.critical("   No group 4 matches:")
+                        logging.critical("   Content: {}".format(content))
+                        logging.critical("   Matches: {}".format(matches.groups()))
+            if content in commands:
+                if commands[content]['restricted']:
+                    if event.user.id in commands[content]['restricted_users']:
+                        self.room.send_message(commands[content]['command'])
 
 
 
