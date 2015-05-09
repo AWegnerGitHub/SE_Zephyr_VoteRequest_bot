@@ -7,18 +7,43 @@ import db_model
 import re
 from SEAPI import SEAPI
 from datetime import datetime, timedelta
+import datetime
 import traceback
+from HTMLParser import HTMLParser
+from collections import Counter
+from urlparse import urlparse
 import pprint
 # Import our user settings
 try:
     import user_settings
 
     CAN_USE_API = True
+    if user_settings.DB_HOST and user_settings.DB_PASS \
+            and user_settings.DB_USER and user_settings.DB_PORT and user_settings.DATABASE:
+        CAN_USE_DATABASE = True
 except ImportError, e:
     if e.message != 'No module named user_settings':
         logging.critical("No module found: {}".format(e.message))
         raise
     CAN_USE_API = False
+    CAN_USE_DATABASE = False
+
+if not CAN_USE_DATABASE:
+    raise ValueError('No database connection information found. Information should be in user_settings.py')
+
+class URLParser(HTMLParser):
+    """ Extract URLs from a string """
+
+    def __init__(self, output_list=None):
+        HTMLParser.__init__(self)
+        if output_list is None:
+            self.output_list = []
+        else:
+            self.output_list = output_list
+
+    def handle_starttag(self, tag, attrs):
+        if tag == 'a':
+            self.output_list.append(dict(attrs).get('href'))
 
 
 def setup_logging(file_name, file_level=logging.INFO, console_level=logging.INFO, requests_level=logging.CRITICAL,
@@ -104,7 +129,8 @@ def save_post_to_db(post, endpoint=None, room_site=None, room_num=None, reason=N
         logging.critical(post)
         raise
 
-    s = connect_to_db("sqlite:///zephyr_vote_requests.db")
+#    s = connect_to_db("sqlite:///zephyr_vote_requests.db")
+    s = connect_to_db()
     request_type_id = db_model.RequestType.by_type(s, reason)
     post_type_id = 1 if endpoint == "questions" else 2
 
@@ -122,15 +148,15 @@ def save_post_to_db(post, endpoint=None, room_site=None, room_num=None, reason=N
 
     # Dates
     closed_date = data.setdefault(u'closed_date', None)
-    closed_date = None if not closed_date else datetime.fromtimestamp(closed_date)
+    closed_date = None if not closed_date else datetime.datetime.fromtimestamp(closed_date)
     creation_date = data.setdefault(u'creation_date', None)
-    creation_date = None if not creation_date else datetime.fromtimestamp(creation_date)
+    creation_date = None if not creation_date else datetime.datetime.fromtimestamp(creation_date)
     last_activity_date = data.setdefault(u'last_activity_date', None)
-    last_activity_date = None if not last_activity_date else datetime.fromtimestamp(last_activity_date)
+    last_activity_date = None if not last_activity_date else datetime.datetime.fromtimestamp(last_activity_date)
     last_edit_date = data.setdefault(u'last_edit_date', None)
-    last_edit_date = None if not last_edit_date else datetime.fromtimestamp(last_edit_date)
+    last_edit_date = None if not last_edit_date else datetime.datetime.fromtimestamp(last_edit_date)
     locked_date = data.setdefault(u'locked_date', None)
-    locked_date = None if not locked_date else datetime.fromtimestamp(locked_date)
+    locked_date = None if not locked_date else datetime.datetime.fromtimestamp(locked_date)
 
     # Deeper values
     last_editor_id = data.setdefault(u'last_editor', None)
@@ -173,7 +199,7 @@ def save_post_to_db(post, endpoint=None, room_site=None, room_num=None, reason=N
         request_from_room_num=room_num,
         request_from_room_site=room_site,
         request_type_id=request_type_id,
-        request_time=datetime.now()
+        request_time=datetime.datetime.now()
     ))
     try:
         s.commit()
@@ -196,11 +222,61 @@ def save_user(s, user):
         s.rollback()
 
 
-def connect_to_db(db_name):
+#def connect_to_db(db_name):
+def connect_to_db():
     '''Connect to SQLite database'''
-    logging.debug("Connecting to %s" % (db_name))
-    engine = create_engine(db_name, convert_unicode=True, echo=False)
+    logging.debug("Connecting to {}@{}".format(user_settings.DATABASE, user_settings.DB_HOST))
+#    engine = create_engine(db_name, convert_unicode=True, echo=False)
+    connect_string = 'mysql+pymysql://{}:{}@{}:{}/{}'.format(user_settings.DB_USER, user_settings.DB_PASS,
+                                                     user_settings.DB_HOST, user_settings.DB_PORT,
+                                                     user_settings.DATABASE)
+    engine = create_engine(connect_string, convert_unicode=True, echo=True)
     session = sessionmaker()
     session.configure(bind=engine)
     logging.debug('Connection to database initialized; returning session.')
     return session()
+
+
+def print_spam_statistics():
+    TODAY = datetime.date.today()
+    FIRST_OF_MONTH = datetime.date(TODAY.year, TODAY.month, 1)
+    urls = URLParser()
+    domains = []
+
+#    s = connect_to_db("sqlite:///zephyr_vote_requests.db")
+    s = connect_to_db()
+    now = datetime.datetime.now()
+    spam_posts = s.query(db_model.Post).filter(
+        db_model.Post.request_type_id == 9,  # Spam Type
+        db_model.Post.request_time >= FIRST_OF_MONTH
+    ).all()
+
+    for spam in spam_posts:
+        urls.feed(spam.body)
+
+    for url in urls.output_list:
+        parsed_uri = urlparse(url)
+        domains.append('{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri))
+
+    unique_urls = list(set(urls.output_list))
+    unique_domains = list(set(domains))
+    count_urls = Counter(urls.output_list)
+    count_domains = Counter(domains)
+
+    message = "     \n"
+    message += "    Spam URLs seen by Zephyr in {}\n".format(TODAY.strftime("%B %Y"))
+    message += "    Total URLs: {}\n".format(len(urls.output_list))
+    message += "    Total Domains: {}\n".format(len(domains))
+    message += "    Total Unique URLs: {}\n".format(len(unique_urls))
+    message += "    Total Unique domains: {}\n".format(len(unique_domains))
+    message += "    \n"
+    message += "    20 Most Common (Domains):\n"
+    message += "    " + ("-" * 20) + "\n"
+    for url, count in count_domains.most_common(20):
+        message += "      {count}  {url}\n".format(count=count, url=url)
+    message += "    \n"
+    message += "    20 Most Common (Full Path):\n"
+    message += "    " + ("-" * 20) + "\n"
+    for url, count in count_urls.most_common(20):
+        message += "      {count}  {url}\n".format(count=count, url=url)
+    return message

@@ -18,9 +18,8 @@ from utils import utils
 import os
 import threading
 import string
-import common_spam_urls
 
-logging = utils.setup_logging("zephyr_monitor", file_level=logging.DEBUG, console_level=logging.INFO,
+logging = utils.setup_logging("zephyr_monitor", file_level=logging.INFO, console_level=logging.INFO,
                               requests_level=logging.CRITICAL, chatexchange_level=logging.CRITICAL)
 
 # Import our user settings
@@ -48,7 +47,7 @@ commands = {
                    'restricted_users': [66258,      # Andy
                                         186281,     # Andy
                                         ],
-                   'command': common_spam_urls.print_spam_statistics()}
+                   'command': 'print_spam_statistics'}
 
 }
 
@@ -157,7 +156,7 @@ class ChatMonitorBot(threading.Thread):
             if content in commands:
                 if commands[content]['restricted']:
                     if event.user.id in commands[content]['restricted_users']:
-                        self.room.send_message(commands[content]['command'])
+                        self.room.send_message(getattr(utils, commands[content]['command'])())
 
 
 
