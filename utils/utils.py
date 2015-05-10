@@ -227,10 +227,10 @@ def connect_to_db():
     '''Connect to SQLite database'''
     logging.debug("Connecting to {}@{}".format(user_settings.DATABASE, user_settings.DB_HOST))
 #    engine = create_engine(db_name, convert_unicode=True, echo=False)
-    connect_string = 'mysql+pymysql://{}:{}@{}:{}/{}'.format(user_settings.DB_USER, user_settings.DB_PASS,
+    connect_string = 'mysql+pymysql://{}:{}@{}:{}/{}?charset=utf8'.format(user_settings.DB_USER, user_settings.DB_PASS,
                                                      user_settings.DB_HOST, user_settings.DB_PORT,
                                                      user_settings.DATABASE)
-    engine = create_engine(connect_string, convert_unicode=True, echo=True)
+    engine = create_engine(connect_string, convert_unicode=True, echo=False)
     session = sessionmaker()
     session.configure(bind=engine)
     logging.debug('Connection to database initialized; returning session.')
