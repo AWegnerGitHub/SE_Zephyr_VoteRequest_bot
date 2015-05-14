@@ -77,12 +77,16 @@ def setup_logging(file_name, file_level=logging.INFO, console_level=logging.INFO
     return logger
 
 
-def save_post(url=None, room_site=None, room_num=None, reason=None):
-    '''Save a post's information by utilizing the StackExchange API'''
-    if not CAN_USE_API:
-        return
+def retrieve_post(url):
+    """
+    Retrieves post information
+    :param url: URL of post to retreive
+    :return:
+        dict: The post returned from the API
+        string: The endpoint utilized
+    """
 
-    url_regex = r"(https?://(.*)\.com/((?:q(?:uestions)?|a(?:nswer)?))/(\d+)(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)"
+    url_regex = r"(https?://(.*)\.com/((?:q(?:uestions)?|a(?:nswer)?))/(\d+)(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#(\d+))?)"
     endpoint_dict = {  # A quick look up dict to utilize for determining appropriate end point
                        "q": "questions",
                        "questions": "questions",
@@ -98,8 +102,14 @@ def save_post(url=None, room_site=None, room_num=None, reason=None):
         logging.critical("   Groups: {}".format(matches))
         logging.critical("   Groups: {}".format(matches.groups()))
         return
-    endpoint = endpoint_dict[matches.group(3)]
-    post_id = matches.group(4)
+    if matches.group(5) is None:
+        endpoint = endpoint_dict[matches.group(3)]
+        post_id = matches.group(4)
+    else:
+        if matches.group(3) in ['q', 'questions']:
+            endpoint = 'answers'
+            post_id = matches.group(5)
+
     if endpoint == "questions":
         filter = user_settings.API_QUESTION_FILTER
     elif endpoint == "answers":
@@ -117,10 +127,7 @@ def save_post(url=None, room_site=None, room_num=None, reason=None):
         return
 
     post = SITE.fetch("{}/{}".format(endpoint, post_id), filter=filter)
-    save_post_to_db(post, endpoint, room_site, room_num, reason)
 
-
-def save_post_to_db(post, endpoint=None, room_site=None, room_num=None, reason=None):
     try:
         data = post['items'][0]
     except IndexError:
@@ -129,7 +136,26 @@ def save_post_to_db(post, endpoint=None, room_site=None, room_num=None, reason=N
         logging.critical(post)
         raise
 
-#    s = connect_to_db("sqlite:///zephyr_vote_requests.db")
+    return data, endpoint
+
+def save_post(url=None, room_site=None, room_num=None, reason=None):
+    '''Save a post's information by utilizing the StackExchange API'''
+    if not CAN_USE_API:
+        return
+
+    post, endpoint = retrieve_post(url)
+    save_post_to_db(post, endpoint, room_site, room_num, reason)
+
+
+def save_post_to_db(data, endpoint=None, room_site=None, room_num=None, reason=None):
+    '''
+    :param data: Post from API stripped down to the `data` key
+    :param endpoint: End point utilized
+    :param room_site: Site the chatroom is one
+    :param room_num: Room number of Chatroom
+    :param reason: Reason for flag request
+    :return: None
+    '''
     s = connect_to_db()
     request_type_id = db_model.RequestType.by_type(s, reason)
     post_type_id = 1 if endpoint == "questions" else 2
@@ -243,7 +269,6 @@ def print_spam_statistics():
     urls = URLParser()
     domains = []
 
-#    s = connect_to_db("sqlite:///zephyr_vote_requests.db")
     s = connect_to_db()
     now = datetime.datetime.now()
     spam_posts = s.query(db_model.Post).filter(
