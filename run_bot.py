@@ -127,6 +127,11 @@ class ChatMonitorBot(threading.Thread):
             logging.debug("   Occurred in %s by user %s" % (self.room_base_message, self.client.get_user(event.user.id).name))
             logging.debug("   Error %s" % (e))
             logging.debug(traceback.format_exc())
+        except requests.exceptions.ConnectionError, e:
+            logging.debug("   Connection Error.")
+            logging.debug("   Occurred in %s by user %s" % (self.room_base_message, self.client.get_user(event.user.id).name))
+            logging.debug("   Error %s" % (e))
+            logging.debug(traceback.format_exc())
 
         if should_check_message:
             for p in self.patterns:
