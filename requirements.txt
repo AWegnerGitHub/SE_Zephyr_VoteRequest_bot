@@ -4,3 +4,5 @@ websocket-client
 beautifulsoup4
 sqlalchemy
 pymysql
+textstat==0.1.6
+textblob==0.9.0

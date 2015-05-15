@@ -42,15 +42,7 @@ bots = []
 message_queue = Queue()
 REASON_CLEAN_REGEX = '^[tag:][.!,;:\-()]'
 
-commands = {
-    'spamreport': {'restricted': True,
-                   'restricted_users': [66258,      # Andy
-                                        186281,     # Andy
-                                        ],
-                   'command': 'print_spam_statistics'}
-
-}
-
+commands = utils.commands
 
 class ChatMonitorBot(threading.Thread):
     def __init__(self, queue, room_num, room_site=None,
@@ -158,10 +150,12 @@ class ChatMonitorBot(threading.Thread):
                         logging.critical("   No group 4 matches:")
                         logging.critical("   Content: {}".format(content))
                         logging.critical("   Matches: {}".format(matches.groups()))
-            if content in commands:
-                if commands[content]['restricted']:
-                    if event.user.id in commands[content]['restricted_users']:
-                        self.room.send_message(getattr(utils, commands[content]['command'])())
+            if content.split(" ")[0] in commands:
+                if commands[content.split(" ")[0]]['restricted']:
+                    if event.user.id in commands[content.split(" ")[0]]['restricted_users']:
+                        self.room.send_message(getattr(utils, commands[content.split(" ")[0]]['command'])(content))
+                else:
+                    self.room.send_message(getattr(utils, commands[content.split(" ")[0]]['command'])(content))
 
 
 

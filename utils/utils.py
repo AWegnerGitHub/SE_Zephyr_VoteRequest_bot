@@ -13,6 +13,16 @@ from HTMLParser import HTMLParser
 from collections import Counter
 from urlparse import urlparse
 import pprint
+from SEAPI import SEAPI
+import re
+import logging
+import user_settings
+import traceback
+from textstat.textstat import textstat
+from bs4 import BeautifulSoup
+from textblob import TextBlob
+from collections import Counter
+import re, htmlentitydefs
 # Import our user settings
 try:
     import user_settings
@@ -31,6 +41,32 @@ except ImportError, e:
 if not CAN_USE_DATABASE:
     raise ValueError('No database connection information found. Information should be in user_settings.py')
 
+commands = {
+    'spamreport': {'restricted': True,
+                   'restricted_users': [66258,      # Andy
+                                        186281,     # Andy
+                                        ],
+                   'command': 'print_spam_statistics',
+                   'description': 'Show statistics on spam Zephyr has seen this month',
+                   'usage': None
+                   },
+    'analyzepost': {'restricted': True,
+                   'restricted_users': [66258,      # Andy
+                                        186281,     # Andy
+                                        ],
+                   'command': 'print_post_analysis',
+                   'description': 'Show text features of a post, passed by a URL to post (This command eats an API call)',
+                   'usage': 'analyzepost <url>'
+                   },
+    'zephyrhelp': {'restricted': False,
+                   'restricted_users': [],
+                   'command': 'print_help',
+                   'description': 'Show commands accessible by Zephyr',
+                   'usage': None
+                   },
+
+}
+
 class URLParser(HTMLParser):
     """ Extract URLs from a string """
 
@@ -44,6 +80,39 @@ class URLParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
         if tag == 'a':
             self.output_list.append(dict(attrs).get('href'))
+
+
+class TextFeature(object):
+    """
+    A single feature, and related attributes, of a piece of text
+
+    :param name: The name of this feature
+
+    Other attributes:
+        value: The value associated with this feature; Can be any object
+        group_by: An id used to associated this feature with other features
+    """
+    def __init__(self, name, value = None, group_by = None):
+        self.name = name
+        self.value = value
+        self.group_by = group_by
+
+    def __repr__(self):
+        return "TextFeature(name = '{}', value = {}, group_by = {})".format(
+            self.name,
+            self.value,
+            self.group_by
+        )
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            if self.name == other.name and self.value == other.value:
+                return True
+            else:
+                return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
 
 
 def setup_logging(file_name, file_level=logging.INFO, console_level=logging.INFO, requests_level=logging.CRITICAL,
@@ -247,8 +316,6 @@ def save_user(s, user):
     except IntegrityError:
         s.rollback()
 
-
-#def connect_to_db(db_name):
 def connect_to_db():
     '''Connect to SQLite database'''
     logging.debug("Connecting to {}@{}".format(user_settings.DATABASE, user_settings.DB_HOST))
@@ -263,7 +330,36 @@ def connect_to_db():
     return session()
 
 
-def print_spam_statistics():
+def unescape(text):
+    """
+    Converts HTML entities to friendly strings
+
+    http://effbot.org/zone/re-sub.htm#unescape-html
+    :param text: HTML/XML text
+    :return: string
+    """
+    def fixup(m):
+        text = m.group(0)
+        if text[:2] == "&#":
+            # character reference
+            try:
+                if text[:3] == "&#x":
+                    return unichr(int(text[3:-1], 16))
+                else:
+                    return unichr(int(text[2:-1]))
+            except ValueError:
+                pass
+        else:
+            # named entity
+            try:
+                text = unichr(htmlentitydefs.name2codepoint[text[1:-1]])
+            except KeyError:
+                pass
+        return text # leave as is
+    return re.sub("&#?\w+;", fixup, text)
+
+
+def print_spam_statistics(content=None):
     TODAY = datetime.date.today()
     FIRST_OF_MONTH = datetime.date(TODAY.year, TODAY.month, 1)
     urls = URLParser()
@@ -304,4 +400,189 @@ def print_spam_statistics():
     message += "    " + ("-" * 20) + "\n"
     for url, count in count_urls.most_common(20):
         message += "      {count}  {url}\n".format(count=count, url=url)
+    return message
+
+
+def process_text(text):
+    """
+    Processes the text passed and prints results
+    :param text: Text string to process
+    :return: dict: Results of various tests
+    """
+    no_code_text, num_code_blocks = _strip_code_blocks(text)
+
+    results = []
+    group_by = 'Basic Text Statistics'
+    results.append(TextFeature('Number of Code Blocks', num_code_blocks, group_by))
+    results.extend(_get_base_textstats(no_code_text))
+    results.extend(_get_detailed_stats(no_code_text))
+    results.extend(_get_reading_stats(no_code_text))
+    return results
+
+
+def format_results(results, url, title):
+    """
+    Prints a report from the passed results
+    :param results: list: Containing the resultset
+    :param url: string: URL that was checked
+    :param title: string: Title of post
+    :return: None
+    """
+    message = "     \n"
+    message += "    Report for {}\n".format(unescape(title))
+    message += "       {}\n".format(url)
+    current_group = None
+    for r in results:
+        if r.group_by != current_group:
+            current_group = r.group_by
+            message += "    \n"
+            message += "       {}\n".format(r.group_by)
+        message += "    {}: {}\n".format(r.name, r.value)
+    return message
+
+
+def _count_code_blocks(no_code_soup):
+    """
+    Counts the number of code blocks in the soup passed
+    :param no_code_soup: Soup to check for code blocks
+    :return: int: Number of code blocks
+    """
+    num_code_blocks = 0
+    for pre_tag in no_code_soup.find_all('pre'):
+        if pre_tag.find('code'):
+            num_code_blocks += 1
+            no_code_soup.pre.decompose()
+    return num_code_blocks
+
+def _get_base_textstats(no_code_text):
+    """
+    Find basic text statistics
+    :param no_code_text: Text we are analyzing
+    :return: list: List of results
+    """
+    results = []
+    group_by = 'Basic Text Statistics'
+    num_chars = len(no_code_text)
+    num_lower = sum(1 for c in no_code_text if c.islower())
+    num_upper = sum(1 for c in no_code_text if c.isupper())
+    num_letters = sum(1 for c in no_code_text if c.isalpha())
+    num_numbers = sum(1 for c in no_code_text if c.isdigit())
+    num_alphanum = sum(1 for c in no_code_text if c.isalnum())
+    num_otherchars = num_chars - num_alphanum
+    results.append(TextFeature('Number of characters', num_chars, group_by))
+    results.append(TextFeature('Number of letters', num_letters, group_by))
+    results.append(TextFeature('Number of numbers', num_numbers, group_by))
+    results.append(TextFeature('Number of other characters', num_otherchars, group_by))
+    character_counts = Counter(no_code_text.lower())
+    for c in sorted(character_counts.items()):
+        try:
+            results.append(TextFeature('Character count for "{}"'.format(c[0].encode('unicode_escape')), c[1], group_by))
+        except AttributeError:
+            results.append(TextFeature('Character count for "{}"'.format(c[0]), c[1], group_by))
+
+    results.append(TextFeature('Number of syllables', textstat.syllable_count(no_code_text), group_by))
+    results.append(TextFeature('Lexicon Count (without punctuation)', textstat.lexicon_count(no_code_text, True), group_by))
+    results.append(TextFeature('Lexicon Count (with punctuation)', textstat.lexicon_count(no_code_text, False), group_by))
+    results.append(TextFeature('Number of lower case characters', num_lower, group_by))
+    results.append(TextFeature('Number of upper case characters', num_upper, group_by))
+    return results
+
+
+def _get_detailed_stats(no_code_text):
+    """
+    Returns detailed stats on text
+    :param no_code_text: String to analyse
+    :return: list of details
+    """
+    results = []
+    group_by = 'Detailed Text Statistics'
+    tb = TextBlob(no_code_text)
+    # Spell check here...it's very slow
+    results.append(TextFeature('Number of sentences', textstat.sentence_count(no_code_text), group_by))
+    results.append(TextFeature('Number of sentences (again)', len(tb.sentences), group_by))
+    results.append(TextFeature('Number of words', len(tb.words), group_by))
+    results.append(TextFeature('Sentiment Polarity', tb.sentiment.polarity, group_by))
+    results.append(TextFeature('Sentiment Subjectivity', tb.sentiment.subjectivity, group_by))
+    results.append(TextFeature('Detected Language', tb.detect_language(), group_by))
+    results.append(TextFeature('Number of important phrases', len(tb.noun_phrases), group_by))
+    results.append(TextFeature('Number of word bi-grams', len(tb.ngrams(2)), group_by))
+    results.append(TextFeature('Number of word tri-grams', len(tb.ngrams(3)), group_by))
+    results.append(TextFeature('Number of word 4-grams', len(tb.ngrams(4)), group_by))
+    return results
+
+
+def _get_reading_stats(no_code_text):
+    """
+    Returns reading level information
+    :param no_code_text: String to analyse
+    :return: list of details
+    """
+    group_by = 'Reading Level Analysis '
+    results = []
+    results.append(TextFeature('Flesch Reading Ease', textstat.flesch_reading_ease(no_code_text), group_by))        # higher is better, scale 0 to 100
+    results.append(TextFeature('Flesch-Kincaid Grade Level', textstat.flesch_kincaid_grade(no_code_text), group_by))
+    try:
+        results.append(TextFeature('The Fog Scale (Gunning FOG formula)', textstat.gunning_fog(no_code_text), group_by))
+    except IndexError:  # Not sure why, but this test throws this error sometimes
+        results.append(TextFeature('The Fog Scale (Gunning FOG formula)', "Undetermined", group_by))
+    try:
+        results.append(TextFeature('The SMOG Index', textstat.smog_index(no_code_text), group_by))
+    except IndexError:  # Not sure why, but this test throws this error sometimes
+        results.append(TextFeature('The SMOG Index', "Undetermined", group_by))
+    results.append(TextFeature('Automated Readability Index', textstat.automated_readability_index(no_code_text), group_by))
+    results.append(TextFeature('The Coleman-Liau Index', textstat.coleman_liau_index(no_code_text), group_by))
+    results.append(TextFeature('Linsear Write Formula', textstat.linsear_write_formula(no_code_text), group_by))
+    try:
+        results.append(TextFeature('Linsear Write Formula', textstat.dale_chall_readability_score(no_code_text), group_by))
+    except IndexError:  # Not sure why, but this test throws this error sometimes
+        results.append(TextFeature('Linsear Write Formula', "Undetermined", group_by))
+
+    try:
+        results.append(TextFeature('Readability Consensus', textstat.readability_consensus(no_code_text), group_by))
+    except (TypeError, IndexError):
+        results.append(TextFeature('Readability Consensus', "Undetermined; One of the tests above failed.", group_by))
+    return results
+
+
+def _strip_code_blocks(text):
+    """
+    Strips the code blocks from text
+    :param text: Text that we want code blocks removed from
+    :return: string: text without code blocks
+             int: number of code blocks removed
+    """
+
+    no_code_soup = BeautifulSoup(text)
+    num_code_blocks = _count_code_blocks(no_code_soup)
+    no_code_text = no_code_soup.get_text()
+    return no_code_text, num_code_blocks
+
+def print_post_analysis(content=None):
+    """
+    Returns the analysis of post
+    :param content: Message received from chat
+    :return: string: message to post
+    """
+    post_to_check = content.split(" ")[1]
+    data, endpoint = retrieve_post(post_to_check)
+    body = data.setdefault(u'body', None)
+    title = data.setdefault(u'title',None)
+    return format_results(process_text(body), post_to_check, title)
+
+def print_help(content=None):
+    """
+    Returns Zephyr's help contents
+    :param content:
+    :return:
+    """
+    message = "    \n"
+    for c in sorted(commands.keys()):
+        message += "    "
+        if commands[c]['usage']:
+            message += "{}: {} (exampe: '{}')".format(c, commands[c]['description'], commands[c]['usage'])
+        else:
+            message += "{}: {}".format(c, commands[c]['description'])
+        if commands[c]['restricted']:
+            message += " **Restricted Command** "
+        message += "\n"
     return message
