@@ -531,11 +531,14 @@ def _get_reading_stats(no_code_text):
         results.append(TextFeature('The SMOG Index', "Undetermined", group_by))
     results.append(TextFeature('Automated Readability Index', textstat.automated_readability_index(no_code_text), group_by))
     results.append(TextFeature('The Coleman-Liau Index', textstat.coleman_liau_index(no_code_text), group_by))
-    results.append(TextFeature('Linsear Write Formula', textstat.linsear_write_formula(no_code_text), group_by))
     try:
-        results.append(TextFeature('Linsear Write Formula', textstat.dale_chall_readability_score(no_code_text), group_by))
-    except IndexError:  # Not sure why, but this test throws this error sometimes
+        results.append(TextFeature('Linsear Write Formula', textstat.linsear_write_formula(no_code_text), group_by))
+    except IndexError:
         results.append(TextFeature('Linsear Write Formula', "Undetermined", group_by))
+    try:
+        results.append(TextFeature('Dale Chall Readability Score', textstat.dale_chall_readability_score(no_code_text), group_by))
+    except IndexError:  # Not sure why, but this test throws this error sometimes
+        results.append(TextFeature('Dale Chall Readability Score', "Undetermined", group_by))
 
     try:
         results.append(TextFeature('Readability Consensus', textstat.readability_consensus(no_code_text), group_by))
