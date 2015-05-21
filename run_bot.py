@@ -76,7 +76,7 @@ class ChatMonitorBot(threading.Thread):
         self.room.join()
         if not self.monitor_room:
             self.patterns = []
-        self.room.watch_socket(self.on_event)
+        self.room.watch(self.on_event)
         self.update_room_information()
 
         logging.info("Starting bot in {} => {}".format(filter(lambda x: x in string.printable, self.room.name.strip()), self.room_number))
