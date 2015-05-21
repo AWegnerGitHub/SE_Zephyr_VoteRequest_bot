@@ -106,13 +106,18 @@ patterns = [
         'translation': "Offensive Flag Request",
         'should_post': True
     },
+    # {
+    #     'regex': "^(\*\*Spam\*\* \*\*[QA]\*\* \(\d*(?:\.\d)?%\):) ()()(?:\[[a-z \-0-9\.@+]*])\((https?://.*\.(?:com|net)/(?:q(?:uestions)?|a(?:nswer)?)/\d+(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)\)",
+    #     'translation': "Spam Flag Request",
+    #     'should_post': False
+    # },
     {
-        'regex': "^(\*\*Spam\*\* \*\*[QA]\*\* \(\d*(?:\.\d)?%\):) ()()(?:\[[a-z \-0-9\.@+]*])\((https?://.*\.(?:com|net)/(?:q(?:uestions)?|a(?:nswer)?)/\d+(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)\)",
+        'regex': "^\*\*(spam)\*\* \*\*[qa]\*\* \(\[`tpa`'d by .*?\]()()\(http://\S*?\)\): \[.*?\]\((http://.*?) .*score:.*\), by",
         'translation': "Spam Flag Request",
         'should_post': False
     },
     {
-        'regex': "^(\[ \[SmokeDetector\]\(https://github.(?:com|net)/Charcoal-SE/SmokeDetector\) \]) .*(Bad keyword in (?:title|body)?).*:() \[(?:](?!\()|[^]])+]\((https?://.*\.(?:com|net)/(?:q(?:uestions)?|a(?:nswer)?)/\d+(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)\)",
+        'regex': "^(\[ \[SmokeDetector\]\(https://github.(?:com|net)/Charcoal-SE/SmokeDetector\) \]) .*(Bad keyword in (?:title|body|answer)?).*:() \[(?:](?!\()|[^]])+]\((https?://.*\.(?:com|net)/(?:q(?:uestions)?|a(?:nswer)?)/\d+(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)\)",
         'translation': "Spam Flag Request",
         'should_post': False
     },
