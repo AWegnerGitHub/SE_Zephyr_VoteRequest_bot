@@ -194,16 +194,17 @@ def retrieve_post(url):
         logging.critical("   Error Code: %s" % (e.code))
         logging.critical("   Error Message: %s" % (e.message))
         return
+    except ValueError:
+        logging.critical("API Error occurred.")
+        logging.critical("   Invalid Site name provided: {}".format(site_parameter))
 
     post = SITE.fetch("{}/{}".format(endpoint, post_id), filter=filter)
 
     try:
         data = post['items'][0]
     except IndexError:
-        logging.critical(traceback.format_exc())
-        logging.critical("Post:")
-        logging.critical(post)
-        raise
+        logging.info("   No 'items' for {}/{}:".format(endpoint, post_id))
+        data = None
 
     return data, endpoint
 
@@ -213,7 +214,8 @@ def save_post(url=None, room_site=None, room_num=None, reason=None):
         return
 
     post, endpoint = retrieve_post(url)
-    save_post_to_db(post, endpoint, room_site, room_num, reason)
+    if post:
+        save_post_to_db(post, endpoint, room_site, room_num, reason)
 
 
 def save_post_to_db(data, endpoint=None, room_site=None, room_num=None, reason=None):
@@ -233,7 +235,7 @@ def save_post_to_db(data, endpoint=None, room_site=None, room_num=None, reason=N
     try:
         save_user(s, data[u'owner'])
     except KeyError:                    # Post has already been removed, we can't do anything with it
-        logging.critical("No owner of post.")
+        logging.info("   No owner of post.")
         return
 
     try:
