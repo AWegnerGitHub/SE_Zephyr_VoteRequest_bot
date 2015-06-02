@@ -155,7 +155,7 @@ def retrieve_post(url):
         string: The endpoint utilized
     """
 
-    url_regex = r"(https?://(.*)\.com/((?:q(?:uestions)?|a(?:nswer)?))/(\d+)(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#(\d+))?)"
+    url_regex = r"(https?://(.*)\.(?:com|net)/((?:q(?:uestions)?|a(?:nswer)?))/(\d+)(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#(\d+))?)"
     endpoint_dict = {  # A quick look up dict to utilize for determining appropriate end point
                        "q": "questions",
                        "questions": "questions",
@@ -197,6 +197,7 @@ def retrieve_post(url):
     except ValueError:
         logging.critical("API Error occurred.")
         logging.critical("   Invalid Site name provided: {}".format(site_parameter))
+        return
 
     post = SITE.fetch("{}/{}".format(endpoint, post_id), filter=filter)
 
