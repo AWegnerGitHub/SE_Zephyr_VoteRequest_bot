@@ -1,4 +1,3 @@
-import logging
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
@@ -166,6 +165,8 @@ def retrieve_post(url):
     matches = re.compile(url_regex, re.IGNORECASE).match(url)
     try:
         site_parameter = matches.group(2).split(".")[0]  # Not all sites are top level, some are site.stackexchange.com
+        if site_parameter in ['ru', 'pt']:
+            site_parameter += ".stackoverflow"
     except AttributeError:
         logging.critical("URL Error: {}".format(url))
         logging.critical("   Groups: {}".format(matches))
@@ -214,7 +215,10 @@ def save_post(url=None, room_site=None, room_num=None, reason=None):
     if not CAN_USE_API:
         return
 
-    post, endpoint = retrieve_post(url)
+    try:
+        post, endpoint = retrieve_post(url)
+    except TypeError:
+        post = None
     if post:
         save_post_to_db(post, endpoint, room_site, room_num, reason)
 
