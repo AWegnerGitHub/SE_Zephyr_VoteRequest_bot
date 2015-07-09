@@ -126,6 +126,11 @@ patterns = [
         'translation': "Spam Flag Request",
         'should_post': False
     },
+    {
+        'regex': "^(\[ \[SmokeDetector\]\(https://github.(?:com|net)/Charcoal-SE/SmokeDetector\) \]) .*(Link at end of body).*:() \[(?:](?!\()|[^]])+]\((https?://.*\.(?:com|net)/(?:q(?:uestions)?|a(?:nswer)?)/\d+(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)\)",
+        'translation': "Spam Flag Request",
+        'should_post': False
+    },
 ]
 
 rooms = [
