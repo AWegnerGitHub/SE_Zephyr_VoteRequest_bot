@@ -154,7 +154,7 @@ def retrieve_post(url):
         string: The endpoint utilized
     """
 
-    url_regex = r"(https?://(.*)\.(?:com|net)/((?:q(?:uestions)?|a(?:nswer)?))/(\d+)(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#(\d+))?)"
+    url_regex = r"((?:https?:)?//(.*)\.(?:com|net)/((?:q(?:uestions)?|a(?:nswer)?))/(\d+)(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#(\d+))?)"
     endpoint_dict = {  # A quick look up dict to utilize for determining appropriate end point
                        "q": "questions",
                        "questions": "questions",
