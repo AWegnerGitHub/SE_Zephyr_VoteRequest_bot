@@ -233,81 +233,86 @@ def save_post_to_db(data, endpoint=None, room_site=None, room_num=None, reason=N
     :return: None
     '''
     s = connect_to_db()
-    request_type_id = db_model.RequestType.by_type(s, reason)
-    post_type_id = 1 if endpoint == "questions" else 2
 
-    # Save the user fields to the database
-    try:
-        save_user(s, data[u'owner'])
-    except KeyError:                    # Post has already been removed, we can't do anything with it
-        logging.info("   No owner of post.")
-        return
+    # See if post is already reported
+    existing = s.query(db_model.Post).filter_by(question_id=data.setdefault(u'question_id', None), answer_id=data.setdefault(u'answer_id', None), link=data.setdefault(u'link', None)).first()
+    if not existing:
+        request_type_id = db_model.RequestType.by_type(s, reason)
+        post_type_id = 1 if endpoint == "questions" else 2
 
-    try:
-        save_user(s, data[u'last_editor'])
-    except KeyError:
-        pass
+        # Save the user fields to the database
+        try:
+            save_user(s, data[u'owner'])
+        except KeyError:                    # Post has already been removed, we can't do anything with it
+            logging.info("   No owner of post.")
+            return
 
-    # Dates
-    closed_date = data.setdefault(u'closed_date', None)
-    closed_date = None if not closed_date else datetime.datetime.fromtimestamp(closed_date)
-    creation_date = data.setdefault(u'creation_date', None)
-    creation_date = None if not creation_date else datetime.datetime.fromtimestamp(creation_date)
-    last_activity_date = data.setdefault(u'last_activity_date', None)
-    last_activity_date = None if not last_activity_date else datetime.datetime.fromtimestamp(last_activity_date)
-    last_edit_date = data.setdefault(u'last_edit_date', None)
-    last_edit_date = None if not last_edit_date else datetime.datetime.fromtimestamp(last_edit_date)
-    locked_date = data.setdefault(u'locked_date', None)
-    locked_date = None if not locked_date else datetime.datetime.fromtimestamp(locked_date)
+        try:
+            save_user(s, data[u'last_editor'])
+        except KeyError:
+            pass
 
-    # Deeper values
-    last_editor_id = data.setdefault(u'last_editor', None)
-    last_editor_id = None if not last_editor_id else last_editor_id[u'user_id']
-    owner_id = data.setdefault(u'owner', None)
-    owner_id = None if not owner_id else owner_id['user_id']
+        # Dates
+        closed_date = data.setdefault(u'closed_date', None)
+        closed_date = None if not closed_date else datetime.datetime.fromtimestamp(closed_date)
+        creation_date = data.setdefault(u'creation_date', None)
+        creation_date = None if not creation_date else datetime.datetime.fromtimestamp(creation_date)
+        last_activity_date = data.setdefault(u'last_activity_date', None)
+        last_activity_date = None if not last_activity_date else datetime.datetime.fromtimestamp(last_activity_date)
+        last_edit_date = data.setdefault(u'last_edit_date', None)
+        last_edit_date = None if not last_edit_date else datetime.datetime.fromtimestamp(last_edit_date)
+        locked_date = data.setdefault(u'locked_date', None)
+        locked_date = None if not locked_date else datetime.datetime.fromtimestamp(locked_date)
 
-    # Tags -> List to String
-    tags = data.setdefault(u'tags',None)
-    tags = None if not tags else ','.join(tags)
+        # Deeper values
+        last_editor_id = data.setdefault(u'last_editor', None)
+        last_editor_id = None if not last_editor_id else last_editor_id[u'user_id']
+        owner_id = data.setdefault(u'owner', None)
+        owner_id = None if not owner_id else owner_id['user_id']
 
-    # Save the post information to the database
-    s.add(db_model.Post(
-        post_type_id=post_type_id,
-        answer_id=data.setdefault(u'answer_id', None),
-        accepted_answer_id=data.setdefault(u'accepted_answer_id', None),
-        body=data.setdefault(u'body', None),
-        close_votes=data.setdefault(u'close_vote_count', None),
-        closed_date=closed_date,
-        closed_reason=data.setdefault(u'closed_reason', None),
-        comment_count=data.setdefault(u'comment_count', None),
-        creation_date=creation_date,
-        delete_vote_count=data.setdefault(u'delete_vote_count', None),
-        down_vote_count=data.setdefault(u'down_vote_count', None),
-        favorite_count=data.setdefault(u'favorite_count', None),
-        is_accepted=data.setdefault(u'is_accepted', None),
-        last_activity_date=last_activity_date,
-        last_edit_date=last_edit_date,
-        last_editor_id=last_editor_id,
-        link=data.setdefault(u'link', None),
-        locked_date=locked_date,
-        owner_id=owner_id,
-        question_id=data.setdefault(u'question_id', None),
-        reopen_vote_count=data.setdefault(u'reopen_vote_count', None),
-        score=data.setdefault(u'score',None),
-        tags=tags,
-        title=data.setdefault(u'title',None),
-        up_vote_count=data.setdefault(u'up_vote_count',None),
-        view_count=data.setdefault(u'view_count',None),
-        request_from_room_num=room_num,
-        request_from_room_site=room_site,
-        request_type_id=request_type_id,
-        request_time=datetime.datetime.now()
-    ))
-    try:
-        s.commit()
-    except IntegrityError:
-        s.rollback()
+        # Tags -> List to String
+        tags = data.setdefault(u'tags',None)
+        tags = None if not tags else ','.join(tags)
 
+        # Save the post information to the database
+        s.add(db_model.Post(
+            post_type_id=post_type_id,
+            answer_id=data.setdefault(u'answer_id', None),
+            accepted_answer_id=data.setdefault(u'accepted_answer_id', None),
+            body=data.setdefault(u'body', None),
+            close_votes=data.setdefault(u'close_vote_count', None),
+            closed_date=closed_date,
+            closed_reason=data.setdefault(u'closed_reason', None),
+            comment_count=data.setdefault(u'comment_count', None),
+            creation_date=creation_date,
+            delete_vote_count=data.setdefault(u'delete_vote_count', None),
+            down_vote_count=data.setdefault(u'down_vote_count', None),
+            favorite_count=data.setdefault(u'favorite_count', None),
+            is_accepted=data.setdefault(u'is_accepted', None),
+            last_activity_date=last_activity_date,
+            last_edit_date=last_edit_date,
+            last_editor_id=last_editor_id,
+            link=data.setdefault(u'link', None),
+            locked_date=locked_date,
+            owner_id=owner_id,
+            question_id=data.setdefault(u'question_id', None),
+            reopen_vote_count=data.setdefault(u'reopen_vote_count', None),
+            score=data.setdefault(u'score',None),
+            tags=tags,
+            title=data.setdefault(u'title',None),
+            up_vote_count=data.setdefault(u'up_vote_count',None),
+            view_count=data.setdefault(u'view_count',None),
+            request_from_room_num=room_num,
+            request_from_room_site=room_site,
+            request_type_id=request_type_id,
+            request_time=datetime.datetime.now()
+        ))
+        try:
+            s.commit()
+        except IntegrityError:
+            s.rollback()
+    else:
+        logging.debug("   Post already reported.")
 
 def save_user(s, user):
     '''Saves a user to the database. If user already exists, ignore.'''
