@@ -42,8 +42,8 @@ test_strings = [
     # "[ [SmokeDetector](https://github.com/Charcoal-SE/SmokeDetector) ] Bad keyword in body, Blacklisted website: [However take that same aesthetic and put](http://drupal.stackexchange.com/questions/152240/however-take-that-same-aesthetic-and-put) by [olivianewton](http://drupal.stackexchange.com/users/45453/olivianewton) on `drupal.stackexchange.com` ",
     # "[ [SmokeDetector](https://github.com/Charcoal-SE/SmokeDetector) ] Bad keyword in body: [It provides high level of skin moisture?](http://askubuntu.com/questions/616676/it-provides-high-level-of-skin-moisture) by [tkeikaw Ixji](http://askubuntu.com/users/403751/tkeikaw-ixji) on `askubuntu.com` ",
     # "[tag:cv-pls] http://stackoverflow.com/questions/30244930/how-to-implement-material-design-in-android-studio ",
-    """**Spam** **Q** ([`TPA`'d by Sam](http://chat.meta.stackexchange.com/transcript/message/3442749)): [More aerodynamic router designs need](http://drupal.stackexchange.com/questions/158348 "Score: 0"), by [?](http://chat.meta.stackexchange.com/transcript/message/2998326) [john](http://drupal.stackexchange.com/users/47340 "Rep: 1"), on `drupal.stackexchange.com`.""",
-
+    # """**Spam** **Q** ([`TPA`'d by Sam](http://chat.meta.stackexchange.com/transcript/message/3442749)): [More aerodynamic router designs need](http://drupal.stackexchange.com/questions/158348 "Score: 0"), by [?](http://chat.meta.stackexchange.com/transcript/message/2998326) [john](http://drupal.stackexchange.com/users/47340 "Rep: 1"), on `drupal.stackexchange.com`.""",
+    """[ [SmokeDetector](https://github.com/Charcoal-SE/SmokeDetector) ] Manually reported question: [Your Mind Cans Reinforce](//superuser.com/questions/944613) by [Carmen M Snyder](//superuser.com/users/472807/carmen-m-snyder) on `superuser.com` """,
 ]
 
 room_base_message = "from [%s](http://chat.%s/rooms/%s/)" % ('TESTING!', "TESTING.NONE", 89)
