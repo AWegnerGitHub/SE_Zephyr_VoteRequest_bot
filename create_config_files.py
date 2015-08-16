@@ -1,6 +1,7 @@
 import json
 
 patterns = [
+    # Common Patterns across SE
     {
         'regex': "^((?:\[)?cv-pl[sz].*?(?:\])?|\[tag:cv-pl[sz](-.*)?])(?: )?((?:\[tag\:*)?[\w :\-\(\)\*]+(?:\])?)?(?: )?(https?://.*\.(?:com|net)/(?:q(?:uestions)?|a(?:nswer)?)/\d+(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)",
         'translation': "Close Vote Request",
@@ -97,15 +98,17 @@ patterns = [
         'should_post': True
     },
     {
-        'regex': r"^(\\\[\[Blaze\]\(https://github\.(?:com|net)/Charcoal-SE/Blaze\)\]) (?:q(?:uestion)?|a(?:nswer)?)()() flagged by \w+: (https?://.*\.(?:com|net)/(?:q(?:uestions)?|a(?:nswer)?)/\d+(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)",
-        'translation': "Flag Request",
-        'should_post': True
-    },
-    {
         'regex': "^((?:\[)?offensive.*?(?:\])?|\[tag:offensive(-.*)?])(?: )?((?:\[tag\:*)?[\w :\-\(\)\*]+(?:\])?)?(?: )?(https?://.*\.(?:com|net)/(?:q(?:uestions)?|a(?:nswer)?)/\d+(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)",
         'translation': "Offensive Flag Request",
         'should_post': True
     },
+    # Blaze Specific patterns: https://github.com/Charcoal-SE/Blaze
+    {
+        'regex': r"^(\\\[\[Blaze\]\(https://github\.(?:com|net)/Charcoal-SE/Blaze\)\]) (?:q(?:uestion)?|a(?:nswer)?)()() flagged by \w+: (https?://.*\.(?:com|net)/(?:q(?:uestions)?|a(?:nswer)?)/\d+(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)",
+        'translation': "Flag Request",
+        'should_post': True
+    },
+    # PHAM Specific patterns: https://github.com/ArcticEcho/Phamhilator/wiki
     # {
     #     'regex': "^(\*\*Spam\*\* \*\*[QA]\*\* \(\d*(?:\.\d)?%\):) ()()(?:\[[a-z \-0-9\.@+]*])\((https?://.*\.(?:com|net)/(?:q(?:uestions)?|a(?:nswer)?)/\d+(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)\)",
     #     'translation': "Spam Flag Request",
@@ -116,6 +119,7 @@ patterns = [
         'translation': "Spam Flag Request",
         'should_post': False
     },
+    # Smoke Detector Specific patterns: https://github.com/Charcoal-SE/SmokeDetector
     {
         'regex': "^(\[ \[SmokeDetector\]\(https://github.(?:com|net)/Charcoal-SE/SmokeDetector\) \]) .*(Bad keyword in (?:title|body|answer)?).*:() \[(?:](?!\()|[^]])+]\(((?:https?:)?//.*\.(?:com|net)/(?:q(?:uestions)?|a(?:nswer)?)/\d+(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)\)",
         'translation': "Spam Flag Request",
@@ -135,6 +139,22 @@ patterns = [
         'regex': "^(\[ \[SmokeDetector\]\(https://github.(?:com|net)/Charcoal-SE/SmokeDetector\) \]) .*(Manually reported (?:question|answer)).*:() \[(?:](?!\()|[^]])+]\(((?:https?:)?//.*\.(?:com|net)/(?:q(?:uestions)?|a(?:nswer)?)/\d+(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)\)",
         'translation': "Spam Flag Request",
         'should_post': False
+    },
+    {
+        'regex': "^(\[ \[SmokeDetector\]\(https://github.(?:com|net)/Charcoal-SE/SmokeDetector\) \]) .*(Chinese character in (?:question|answer)).*:() \[(?:](?!\()|[^]])+]\(((?:https?:)?//.*\.(?:com|net)/(?:q(?:uestions)?|a(?:nswer)?)/\d+(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)\)",
+        'translation': "Spam Flag Request",
+        'should_post': False
+    },
+    {
+        'regex': "^(\[ \[SmokeDetector\]\(https://github.(?:com|net)/Charcoal-SE/SmokeDetector\) \]) .*(Pattern-matching website in (?:question|answer)).*:() \[(?:](?!\()|[^]])+]\(((?:https?:)?//.*\.(?:com|net)/(?:q(?:uestions)?|a(?:nswer)?)/\d+(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)\)",
+        'translation': "Spam Flag Request",
+        'should_post': False
+    },
+    # cv-plz user script patterns: https://gist.github.com/Tiny-Giant/ae7c0f5e6823468d75c1
+    {
+        'regex': r"^((?:\[)?cv-pl[sz].*?(?:\])?|\[tag:cv-pl[sz](-.*)?])(?: )?((?:\[tag\:*)?[\w :\-\(\)\*]+(?:\])?)?(?: \[.*\])?\((https?://.*\.(?:com|net)/(?:q(?:uestions)?|a(?:nswer)?)/\d+(?:/)?(?:\d+|(?:\w|-)+)?(?:/\d+)?(?:#\d+)?)\)",
+        'translation': "Close Vote Request",
+        'should_post': True
     },
 ]
 
@@ -184,6 +204,12 @@ rooms = [
     {
         'site': "stackexchange.com",
         'room_num': 11540,
+        'monitor': True,
+        'post_requests': False
+    },
+    {
+        'site': "stackexchange.com",
+        'room_num': 26942,
         'monitor': True,
         'post_requests': False
     },

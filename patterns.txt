@@ -95,14 +95,14 @@
         "translation": "Flag Request -> Very Low Quality"
     }, 
     {
-        "regex": "^(\\\\\\[\\[Blaze\\]\\(https://github\\.(?:com|net)/Charcoal-SE/Blaze\\)\\]) (?:q(?:uestion)?|a(?:nswer)?)()() flagged by \\w+: (https?://.*\\.(?:com|net)/(?:q(?:uestions)?|a(?:nswer)?)/\\d+(?:/)?(?:\\d+|(?:\\w|-)+)?(?:/\\d+)?(?:#\\d+)?)", 
-        "should_post": true, 
-        "translation": "Flag Request"
-    }, 
-    {
         "regex": "^((?:\\[)?offensive.*?(?:\\])?|\\[tag:offensive(-.*)?])(?: )?((?:\\[tag\\:*)?[\\w :\\-\\(\\)\\*]+(?:\\])?)?(?: )?(https?://.*\\.(?:com|net)/(?:q(?:uestions)?|a(?:nswer)?)/\\d+(?:/)?(?:\\d+|(?:\\w|-)+)?(?:/\\d+)?(?:#\\d+)?)", 
         "should_post": true, 
         "translation": "Offensive Flag Request"
+    }, 
+    {
+        "regex": "^(\\\\\\[\\[Blaze\\]\\(https://github\\.(?:com|net)/Charcoal-SE/Blaze\\)\\]) (?:q(?:uestion)?|a(?:nswer)?)()() flagged by \\w+: (https?://.*\\.(?:com|net)/(?:q(?:uestions)?|a(?:nswer)?)/\\d+(?:/)?(?:\\d+|(?:\\w|-)+)?(?:/\\d+)?(?:#\\d+)?)", 
+        "should_post": true, 
+        "translation": "Flag Request"
     }, 
     {
         "regex": "^\\*\\*(spam)\\*\\* \\*\\*[qa]\\*\\* \\(\\[`tpa`'d by .*?\\]()()\\(http://\\S*?\\)\\): \\[.*?\\]\\((http://.*?) .*score:.*\\), by", 
@@ -128,5 +128,20 @@
         "regex": "^(\\[ \\[SmokeDetector\\]\\(https://github.(?:com|net)/Charcoal-SE/SmokeDetector\\) \\]) .*(Manually reported (?:question|answer)).*:() \\[(?:](?!\\()|[^]])+]\\(((?:https?:)?//.*\\.(?:com|net)/(?:q(?:uestions)?|a(?:nswer)?)/\\d+(?:/)?(?:\\d+|(?:\\w|-)+)?(?:/\\d+)?(?:#\\d+)?)\\)", 
         "should_post": false, 
         "translation": "Spam Flag Request"
+    }, 
+    {
+        "regex": "^(\\[ \\[SmokeDetector\\]\\(https://github.(?:com|net)/Charcoal-SE/SmokeDetector\\) \\]) .*(Chinese character in (?:question|answer)).*:() \\[(?:](?!\\()|[^]])+]\\(((?:https?:)?//.*\\.(?:com|net)/(?:q(?:uestions)?|a(?:nswer)?)/\\d+(?:/)?(?:\\d+|(?:\\w|-)+)?(?:/\\d+)?(?:#\\d+)?)\\)", 
+        "should_post": false, 
+        "translation": "Spam Flag Request"
+    }, 
+    {
+        "regex": "^(\\[ \\[SmokeDetector\\]\\(https://github.(?:com|net)/Charcoal-SE/SmokeDetector\\) \\]) .*(Pattern-matching website in (?:question|answer)).*:() \\[(?:](?!\\()|[^]])+]\\(((?:https?:)?//.*\\.(?:com|net)/(?:q(?:uestions)?|a(?:nswer)?)/\\d+(?:/)?(?:\\d+|(?:\\w|-)+)?(?:/\\d+)?(?:#\\d+)?)\\)", 
+        "should_post": false, 
+        "translation": "Spam Flag Request"
+    }, 
+    {
+        "regex": "^((?:\\[)?cv-pl[sz].*?(?:\\])?|\\[tag:cv-pl[sz](-.*)?])(?: )?((?:\\[tag\\:*)?[\\w :\\-\\(\\)\\*]+(?:\\])?)?(?: \\[.*\\])?\\((https?://.*\\.(?:com|net)/(?:q(?:uestions)?|a(?:nswer)?)/\\d+(?:/)?(?:\\d+|(?:\\w|-)+)?(?:/\\d+)?(?:#\\d+)?)\\)", 
+        "should_post": true, 
+        "translation": "Close Vote Request"
     }
 ]

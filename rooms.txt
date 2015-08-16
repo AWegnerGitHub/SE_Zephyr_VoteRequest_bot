@@ -48,6 +48,12 @@
         "monitor": true
     }, 
     {
+        "room_num": 26942, 
+        "site": "stackexchange.com", 
+        "post_requests": false, 
+        "monitor": true
+    }, 
+    {
         "room_num": 773, 
         "site": "meta.stackexchange.com", 
         "post_requests": true, 
