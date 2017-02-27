@@ -1,6 +1,4 @@
 [submodule "ChatExchange"]
 	path = ChatExchange
 	url = https://github.com/Manishearth/ChatExchange.git
-[submodule "SEAPI"]
-	path = SEAPI
-	url = https://github.com/AWegnerGitHub/SEAPI.git
+

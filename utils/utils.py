@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
 import db_model
 import re
-from SEAPI import SEAPI
+from stackapi import StackAPIError, StackAPI
 from datetime import datetime, timedelta
 import datetime
 import traceback
@@ -12,7 +12,6 @@ from HTMLParser import HTMLParser
 from collections import Counter
 from urlparse import urlparse
 import pprint
-from SEAPI import SEAPI
 import re
 import logging
 import user_settings
@@ -186,8 +185,8 @@ def retrieve_post(url):
         filter = user_settings.API_ANSWER_FILTER
 
     try:
-        SITE = SEAPI.SEAPI(site_parameter, key=user_settings.API_KEY, access_token=user_settings.ACCESS_TOKEN)
-    except SEAPI.SEAPIError as e:
+        SITE = StackAPI(site_parameter, key=user_settings.API_KEY, access_token=user_settings.ACCESS_TOKEN)
+    except StackAPIError as e:
         logging.critical("API Error occurred.")
         logging.critical("   Site Parameter: %s" % (site_parameter))
         logging.critical("   Error URL: %s" % (e.url))
