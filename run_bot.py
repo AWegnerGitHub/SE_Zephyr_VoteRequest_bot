@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from HTMLParser import HTMLParser
+from html.parser import HTMLParser
 import logging
 import logging.handlers
 import re
@@ -12,7 +12,7 @@ import sys
 import ChatExchange.chatexchange.client
 import ChatExchange.chatexchange.events
 import json
-from Queue import Queue
+from queue import Queue
 import logging
 from utils import utils
 import os
@@ -25,7 +25,7 @@ logging = utils.setup_logging("zephyr_monitor", file_level=logging.INFO, console
 # Import our user settings
 try:
     import user_settings
-except ImportError, e:
+except ImportError as e:
     if e.message != 'No module named user_settings':
         logging.critical("No module found: {}".format(e.message))
         raise
@@ -35,7 +35,7 @@ try:
     email = user_settings.email
     password = user_settings.password
 except NameError:
-    email = raw_input('Email Address: ')
+    email = input('Email Address: ')
     password = getpass.getpass('Password: ')
 
 bots = []
@@ -79,14 +79,15 @@ class ChatMonitorBot(threading.Thread):
         self.room.watch_socket(self.on_event)
         self.update_room_information()
 
-        logging.info("Starting bot in {} => {}".format(filter(lambda x: x in string.printable, self.room.name.strip()), self.room_number))
+        logging.info("Starting bot in {} => {}".format(self.room.name.strip(), self.room_number))
 
         while self.running:
             time.sleep(0.25)
 
     def update_room_information(self):
         self.room.scrape_info()
-        room_name = (filter(lambda x: x in string.printable, self.room.name.strip())).replace("[","\[").replace("]","\]")
+        # room_name = (filter(lambda x: x in string.printable, self.room.name.strip())).replace("[","\[").replace("]","\]")
+        room_name = self.room.name.strip()
         self.room_base_message = "from [%s](http://chat.%s/rooms/%s/)" % (room_name, self.site, self.room_number)
 
     def on_event(self, event, client):
@@ -114,12 +115,12 @@ class ChatMonitorBot(threading.Thread):
         try:
             content = h.unescape(message.content_source).strip()
             should_check_message = True
-        except requests.exceptions.HTTPError, e:
+        except requests.exceptions.HTTPError as e:
             logging.debug("   404 Raised. Ignoring message.")
             logging.debug("   Occurred in %s by user %s" % (self.room_base_message, self.client.get_user(event.user.id).name))
             logging.debug("   Error %s" % (e))
             logging.debug(traceback.format_exc())
-        except requests.exceptions.ConnectionError, e:
+        except requests.exceptions.ConnectionError as e:
             logging.debug("   Connection Error.")
             logging.debug("   Occurred in %s by user %s" % (self.room_base_message, self.client.get_user(event.user.id).name))
             logging.debug("   Error %s" % (e))
@@ -186,9 +187,9 @@ if __name__ == '__main__':
                 if b.post_requests:
                     try:
                         b.post_request_message(val)
-                    except requests.exceptions.ConnectionError, e:
+                    except requests.exceptions.ConnectionError as e:
                         logging.critical("Error printing to room")
                         logging.critical("Connection error %s" % (e))
         for b in bots:
             if not b.isAlive():
-                print b, "is dead!"
+                print(b, "is dead!")

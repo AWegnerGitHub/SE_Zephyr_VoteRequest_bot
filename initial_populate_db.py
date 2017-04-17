@@ -14,7 +14,7 @@ session = sessionmaker()
 session.configure(bind=engine)
 
 if not os.path.exists(DB_NAME):
-    print "Creating tables"
+    print("Creating tables")
     utils.db_model.create_all_tables(engine)
 
 s = session()

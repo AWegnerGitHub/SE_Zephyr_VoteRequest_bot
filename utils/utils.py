@@ -2,15 +2,15 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
-import db_model
+import utils.db_model as db_model
 import re
 from stackapi import StackAPIError, StackAPI
 from datetime import datetime, timedelta
 import datetime
 import traceback
-from HTMLParser import HTMLParser
+from html.parser import HTMLParser
 from collections import Counter
-from urlparse import urlparse
+from urllib.parse import urlparse
 import pprint
 import re
 import logging
@@ -20,7 +20,8 @@ from textstat.textstat import textstat
 from bs4 import BeautifulSoup
 from textblob import TextBlob
 from collections import Counter
-import re, htmlentitydefs
+import re
+from html.entities import codepoint2name, entitydefs, name2codepoint
 # Import our user settings
 try:
     import user_settings
@@ -29,7 +30,7 @@ try:
     if user_settings.DB_HOST and user_settings.DB_PASS \
             and user_settings.DB_USER and user_settings.DB_PORT and user_settings.DATABASE:
         CAN_USE_DATABASE = True
-except ImportError, e:
+except ImportError as e:
     if e.message != 'No module named user_settings':
         logging.critical("No module found: {}".format(e.message))
         raise
@@ -355,15 +356,15 @@ def unescape(text):
             # character reference
             try:
                 if text[:3] == "&#x":
-                    return unichr(int(text[3:-1], 16))
+                    return chr(int(text[3:-1], 16))
                 else:
-                    return unichr(int(text[2:-1]))
+                    return chr(int(text[2:-1]))
             except ValueError:
                 pass
         else:
             # named entity
             try:
-                text = unichr(htmlentitydefs.name2codepoint[text[1:-1]])
+                text = chr(htmlentitydefs.name2codepoint[text[1:-1]])
             except KeyError:
                 pass
         return text # leave as is
@@ -603,5 +604,5 @@ def print_help(content=None):
 
 def chunks(l, n):
     """Yield successive n-sized chunks from l."""
-    for i in xrange(0, len(l), n):
+    for i in range(0, len(l), n):
         yield l[i:i+n]
